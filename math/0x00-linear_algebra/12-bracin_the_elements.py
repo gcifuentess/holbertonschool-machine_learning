@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 module that performs element-wise addition, subtraction, multiplication,
 and division
