@@ -1,4 +1,4 @@
-#!usr/bin/env python3
+#!/usr/bin/env python3
 '''module that concatenates two matrices along a specific axis'''
 import numpy as np
 
