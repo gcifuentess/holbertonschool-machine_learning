@@ -4,11 +4,8 @@
 
 def add_matrices2D(mat1, mat2):
     '''adds two matrices element-wise'''
-
-    shape1 = matrix_shape(mat1)
-    shape2 = matrix_shape(mat2)
     addition = []
-    if shape1 == shape2:
+    if len(mat1) == len(mat2) and len(mat1[0]) == len(mat2[0]):
         for i in range(0, len(mat1)):
             new_row = []
             for j in range(0, len(mat1[0])):
@@ -17,13 +14,3 @@ def add_matrices2D(mat1, mat2):
     else:
         addition = None
     return(addition)
-
-
-def matrix_shape(matrix):
-    '''calculates the shape of a matrix'''
-    shape = []
-    dimension = matrix.copy()
-    while type(dimension) == list:
-        shape.append(len(dimension))
-        dimension = dimension[0]
-    return(shape)
