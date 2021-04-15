@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+'''transpose of a 2D matrix module'''
 
 
 def matrix_transpose(matrix):
