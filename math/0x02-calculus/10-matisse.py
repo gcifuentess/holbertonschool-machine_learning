@@ -4,9 +4,11 @@
 
 def poly_derivative(poly):
     '''calculates the derivative of a polynomial'''
-    if type(poly) != list or len(poly) <= 1:
+    if type(poly) != list or len(poly) == 0:
         return [0]
     derivative = []
     for i in range(1, len(poly)):
         derivative.append(i * poly[i])
+    if deriavative == []:
+        return [0]
     return derivative
