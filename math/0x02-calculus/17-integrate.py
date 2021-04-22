@@ -14,4 +14,6 @@ def poly_integral(poly, C=0):
         if coeficient - int(coeficient) == 0:
             coeficient = int(coeficient)
         integral.append(coeficient)
+    while integral[-1] == 0 and len(integral) > 1:
+        integral.pop()
     return integral
