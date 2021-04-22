@@ -6,6 +6,4 @@ def summation_i_squared(n):
     '''sumatory of i squared'''
     if (type(n) != int and type(n) != float) or n == 0:
         return None
-    if n == 1:
-        return 1
-    return (n ** 2 + summation_i_squared(n - 1))
+    return sum(range(1, (n * n) + 1, n))
