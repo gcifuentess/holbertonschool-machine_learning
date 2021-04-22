@@ -10,6 +10,8 @@ def poly_integral(poly, C=0):
         return [C]
     integral = [C]
     for i in range(0, len(poly)):
+        if type(poly[i]) != int and type(poly[i]) != float:
+            return None
         coeficient = poly[i] / (i + 1)
         if coeficient - int(coeficient) == 0:
             coeficient = int(coeficient)
