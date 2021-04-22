@@ -9,6 +9,6 @@ def poly_derivative(poly):
     derivative = []
     for i in range(1, len(poly)):
         derivative.append(i * poly[i])
-    if deriavative == []:
+    if derivative == []:
         return [0]
     return derivative
