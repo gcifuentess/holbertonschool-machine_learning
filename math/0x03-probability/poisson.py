@@ -7,8 +7,9 @@ class Poisson():
 
     def __init__(self, data=None, lambtha=1.):
         '''Constructor
-        @data: is a list of the data to be used to estimate the distribution
-        @lambtha: is the expected number of occurences in a given time frame
+        Args:
+            data: is a list of the data to be used to estimate the distribution
+            lambtha: is the expected number of occurences in a given time frame
         '''
 
         self.data = data
@@ -45,3 +46,18 @@ class Poisson():
         elif len(dataset) < 2:
             raise ValueError("data must contain multiple values")
         self.__data = dataset
+
+    def pmf(self, k):
+        '''Calculates the value of the PMF for a given number of successes
+        Args:
+            k: is the number of “successes”. if out of range, return 0
+        '''
+        e = 2.7182818285
+        if type(k) is not int:
+            k = int(k)
+        if k < 0:
+            return 0
+        x = k
+        for i in reversed(range(1, k)):
+            x *= i
+        return ((e ** -self.lambtha) * (self.lambtha ** k)) / x
