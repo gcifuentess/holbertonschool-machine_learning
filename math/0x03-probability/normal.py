@@ -88,7 +88,7 @@ class Normal():
         '''
         e = 2.7182818285
         pi = 3.1415926536
-        a = 1 / (self.stddev * (2 * pi) ** (1 / 2))
+        a = 1 / (self.stddev * ((2 * pi) ** (1 / 2)))
         b = -(((x - self.mean) / self.stddev) ** 2) / 2
         return a * (e ** b)
 
@@ -98,15 +98,12 @@ class Normal():
             x: is the x-value
         Returns: the CDF value for x
         '''
-        a = (x - self.mean) / (self.stddev * (2 ** (1 / 2)))
-        return (1 + erf(a)) / 2
-
-
-def erf(x):
-    pi = 3.1415926536
-    a = 2 / (pi ** (1 / 2))
-    b = (x ** 3) / 3
-    c = (x ** 5) / 10
-    d = (x ** 7) / 42
-    e = (x ** 9) / 216
-    return (a * (x - b + c - d + e))
+        pi = 3.1415926536
+        y = (x - self.mean) / (self.stddev * (2 ** (1 / 2)))
+        erf_a = 2 / (pi ** (1 / 2))
+        erf_b = (y ** 3) / 3
+        erf_c = (y ** 5) / 10
+        erf_d = (y ** 7) / 42
+        erf_e = (y ** 9) / 216
+        erf = (erf_a * (y - erf_b + erf_c - erf_d + erf_e))
+        return (1 + erf) / 2
