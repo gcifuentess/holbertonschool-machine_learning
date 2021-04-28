@@ -77,6 +77,9 @@ class Binomial():
             k: is the number of successes
         Returns: the PMF value for k
         '''
+        if k < 0:
+            return 0
+
         factorial_n = self.n
         for i in reversed(range(1, self.n)):
             factorial_n *= i
@@ -103,6 +106,8 @@ class Binomial():
         '''
         # Hint:
         # https://www.itl.nist.gov/div898/handbook/eda/section3/eda366i.htm
+        if k < 0:
+            return 0
         cdf = 0
         for i in range(k + 1):
             cdf += self.pmf(i)
