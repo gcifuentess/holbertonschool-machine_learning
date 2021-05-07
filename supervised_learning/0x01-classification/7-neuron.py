@@ -144,7 +144,7 @@ class Neuron():
         C = np.zeros((iterations + 1, 1))  # the Cost vector
         for i in range(0, iterations + 1):
             if i > 0:
-                self.gradient_descent(X, Y, A)
+                self.gradient_descent(X, Y, A, alpha)
             A = self.forward_prop(X)
             C[i] = self.cost(Y, A)
             if verbose is True and (i % step == 0 or i == iterations):
