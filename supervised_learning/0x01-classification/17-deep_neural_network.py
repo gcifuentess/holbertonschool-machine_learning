@@ -22,9 +22,9 @@ class DeepNeuralNetwork():
         if type(layers) is not list or len(layers) == 0:
             raise TypeError("layers must be a list of positive integers")
 
-        self.L = len(layers)
-        self.cache = {}
-        self.weights = {}
+        self.__L = len(layers)
+        self.__cache = {}
+        self.__weights = {}
         l_prev = nx
         for i, nodes in enumerate(layers):
             if type(nodes) is not int or nodes <= 0:
@@ -32,7 +32,23 @@ class DeepNeuralNetwork():
             if i > 0:
                 l_prev = layers[i - 1]
             # initialize weights using He et al method:
-            self.weights['W{}'.format(i + 1)] = (np.random.randn(nodes, l_prev)
+            self.weights['W{}'.format(i + 1)] = (np.random.randn(nodes,
+                                                                 l_prev)
                                                  * np.sqrt(2 / l_prev))
             # initialize biases:
             self.weights['b{}'.format(i + 1)] = np.zeros((nodes, 1))
+
+    @property
+    def L(self):
+        '''L getter'''
+        return self.__L
+
+    @property
+    def cache(self):
+        '''cache getter'''
+        return self.__cache
+
+    @property
+    def weights(self):
+        '''weights getter'''
+        return self.__weights
