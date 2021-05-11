@@ -13,9 +13,9 @@ def one_hot_decode(one_hot):
             for each example, or None on failure
     '''
     if (not isinstance(one_hot, np.ndarray) or
-        len(one_hot.shape) != 2 or
-        one_hot.shape[0] < 1 or
-        one_hot.shape[1] < 1):
+       len(one_hot.shape) != 2 or
+       one_hot.shape[0] < 1 or
+       one_hot.shape[1] < 1):
         return None
     try:
         OH_d = np.where(one_hot.T == 1)[1]
