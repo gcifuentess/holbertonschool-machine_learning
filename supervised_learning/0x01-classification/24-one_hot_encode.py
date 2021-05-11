@@ -15,8 +15,8 @@ def one_hot_encode(Y, classes):
         return None
     try:
         m = Y.shape[0]
-    except e:
+        OH = np.zeros((classes, m), dtype=float)
+        OH[Y, np.arange(Y.size)] = 1
+        return OH
+    except Exception:
         return None
-    OH = np.zeros((classes, m), dtype=float)
-    OH[Y, np.arange(Y.size)] = 1
-    return OH
