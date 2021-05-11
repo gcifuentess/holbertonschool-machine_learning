@@ -13,6 +13,5 @@ def one_hot_encode(Y, classes):
     '''
     m = Y.shape[0]
     OH = np.zeros((m, m), dtype=float)
-    for i, value in enumerate(Y):
-        OH[value][i] = 1.0
+    OH[Y, np.arange(Y.size)] = 1
     return OH
