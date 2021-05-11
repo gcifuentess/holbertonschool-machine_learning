@@ -12,7 +12,10 @@ def one_hot_decode(one_hot):
     Return: a numpy.ndarray with shape (m, ) containing the numeric labels
             for each example, or None on failure
     '''
-    if not isinstance(one_hot, np.ndarray):
+    if (not isinstance(one_hot, np.ndarray) or
+        len(one_hot.shape) != 2 or
+        one_hot.shape[0] < 1 or
+        one_hot.shape[1] < 1):
         return None
     try:
         OH_d = np.where(one_hot.T == 1)[1]
