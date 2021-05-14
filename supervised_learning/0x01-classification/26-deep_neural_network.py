@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 '''Deep Neural Network module'''
 import numpy as np
-import pickle
+from pickle import dump, load
+from os.path import isfile
 
 
 class DeepNeuralNetwork():
@@ -206,27 +207,39 @@ class DeepNeuralNetwork():
         return self.evaluate(X, Y)
 
     def save(self, filename):
-        '''def save(self, filename):
-        Args:
-            filename: is the file to which the object should be saved
-        Return: Nothing
-        '''
+        """
+        Saves the instance object to a file in pickle format
+        :param filename: is the file to which the object should be saved
+        :return: None
+        """
+
         if filename == '' or not filename:
             return None
-        if not (filename[-4:] == ".pkl"):
-            filename += ".pkl"
-        with open(filename, mode='wb') as f:
-            pickle.dump(self, f, protocol=3)
+        if not filename.endswith('.pkl'):
+            filename += '.pkl'
+
+        with open(filename, 'wb') as f:
+            dump(self, f, protocol=3)
 
     @staticmethod
     def load(filename):
-        '''Loads a pickled DeepNeuralNetwork object
-        Args:
-            filename: is the file to which the object should be saved
-        Return: the loaded object, or None if filename doesn’t exist
-        '''
-        try:
-            with open(filename, mode='rb') as f:
-                return pickle.load(f)
-        except FileNotFoundError:
+        """
+        Loads a pickled DeepNeuralNetwork object.
+        :param filename: is the file from which the object should be loaded
+        :return: the loaded object, or None if filename doesn’t exist
+        """
+
+        if filename == '' or not filename:
             return None
+        if not filename.endswith('.pkl'):
+            return None
+        if not isfile(filename):
+            return None
+
+        try:
+            f = open(filename, 'rb')
+        except IOError:
+            return None
+        else:
+            with f:
+                return load(f)
