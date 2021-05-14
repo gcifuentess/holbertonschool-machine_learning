@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''Deep Neural Network module'''
 import numpy as np
+import pickle
 
 
 class DeepNeuralNetwork():
