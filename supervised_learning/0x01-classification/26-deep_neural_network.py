@@ -215,6 +215,7 @@ class DeepNeuralNetwork():
             filename += ".pkl"
         with open(filename, mode='wb') as f:
             pickle.dump(self, f)
+            f.close()
 
     @staticmethod
     def load(filename):
@@ -226,6 +227,7 @@ class DeepNeuralNetwork():
         try:
             with open(filename, mode='rb') as f:
                 dnn = pickle.load(f)
+                f.close()
         except Exception:
             dnn = None
         return dnn
