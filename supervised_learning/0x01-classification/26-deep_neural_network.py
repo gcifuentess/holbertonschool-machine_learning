@@ -216,7 +216,7 @@ class DeepNeuralNetwork():
         if not (filename[-4:] == ".pkl"):
             filename += ".pkl"
         with open(filename, mode='wb') as f:
-            pickle.dump(self, f)
+            pickle.dump(self, f, protocol=3)
 
     @staticmethod
     def load(filename):
