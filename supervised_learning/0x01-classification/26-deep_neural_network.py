@@ -211,6 +211,8 @@ class DeepNeuralNetwork():
             filename: is the file to which the object should be saved
         Return: Nothing
         '''
+        if filename == '' or not filename:
+            return None
         if not (filename[-4:] == ".pkl"):
             filename += ".pkl"
         with open(filename, mode='wb') as f:
