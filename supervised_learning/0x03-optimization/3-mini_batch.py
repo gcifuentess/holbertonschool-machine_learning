@@ -37,12 +37,12 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid, batch_size=32,
         train_op is an op to perform one pass of gradient descent on the model
     '''
     with tf.Session() as sess:
-        load = tf.train.import_meta_graph(load_path + ".meta")
-        load.restore(sess, load_path)
+        saver = tf.train.import_meta_graph(load_path + ".meta")
+        saver.restore(sess, load_path)
         x = tf.get_collection("x")[0]
         y = tf.get_collection("y")[0]
-        accuracy = tf.get_collection("accuracy")[0]
         loss = tf.get_collection("loss")[0]
+        accuracy = tf.get_collection("accuracy")[0]
         train_op = tf.get_collection("train_op")[0]
 
         for epoch in range(epochs + 1):
@@ -56,31 +56,31 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid, batch_size=32,
             print("\tValidation Cost: {}".format(cost_val))
             print("\tValidation Accuracy: {}".format(accu_val))
 
-            X_train_s, Y_train_s = shuffle_data(X_train, Y_train)
-
             if epoch < epochs:
+
+                X_train_s, Y_train_s = shuffle_data(X_train, Y_train)
+
                 # MINI BATCH training:
-                for mini in range(0, X_train.shape[0], batch_size):
-                    if (mini + batch_size) < X_train.shape[0]:
-                        X_train_m = X_train_s[mini: mini + batch_size]
-                        Y_train_m = Y_train_s[mini: mini + batch_size]
+                m = X_train.shape[0]
+                for start in range(0, m, batch_size):
+                    if (start + batch_size) < m:
+                        X_train_m = X_train_s[start: start + batch_size]
+                        Y_train_m = Y_train_s[start: start + batch_size]
                     else:
-                        X_train_m = X_train_s[mini: X_train.shape[0]]
-                        Y_train_m = Y_train_s[mini: X_train.shape[0]]
+                        X_train_m = X_train_s[start: m]
+                        Y_train_m = Y_train_s[start: m]
 
                     sess.run(train_op, {x: X_train_m, y: Y_train_m})
 
-                    if mini != 0 and (mini / batch_size + 1) % 100 == 0:
+                    if start != 0 and (start / batch_size + 1) % 100 == 0:
                         cost_mini = sess.run(loss,
                                              feed_dict={x: X_train_m,
                                                         y: Y_train_m})
                         accu_mini = sess.run(accuracy,
                                              feed_dict={x: X_train_m,
                                                         y: Y_train_m})
-                        print("\tStep {}:".format(int(mini / batch_size - 1)))
+                        print("\tStep {}:".format(int(start / batch_size + 1)))
                         print("\t\tCost: {}".format(cost_mini))
                         print("\t\tAccuracy: {}".format(accu_mini))
 
-        to_save = tf.train.Saver()
-
-        return to_save.save(sess, save_path)
+        return saver.save(sess, save_path)
