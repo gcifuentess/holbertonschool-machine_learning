@@ -68,15 +68,19 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid, batch_size=32,
                         X_train_m = X_train_s[mini: X_train.shape[0]]
                         Y_train_m = Y_train_s[mini: X_train.shape[0]]
 
-                    cost_mini = sess.run(loss, feed_dict={x: X_train_m,
-                                                          y: Y_train_m})
-                    accu_mini = sess.run(accuracy, feed_dict={x: X_train_m,
-                                                              y: Y_train_m})
-                    if mini != 0 and (mini / batch_size) % 100 == 0:
-                        print("\tStep {}:".format(int(mini / batch_size)))
-                        print("\t\tCost: {}:".format(cost_mini))
-                        print("\t\tAccuracy: {}:".format(accu_mini))
                     sess.run(train_op, {x: X_train_m, y: Y_train_m})
+
+                    if mini != 0 and (mini / batch_size + 1) % 100 == 0:
+                        cost_mini = sess.run(loss,
+                                             feed_dict={x: X_train_m,
+                                                        y: Y_train_m})
+                        accu_mini = sess.run(accuracy,
+                                             feed_dict={x: X_train_m,
+                                                        y: Y_train_m})
+                        print("\tStep {}:".format(int(mini / batch_size - 1)))
+                        print("\t\tCost: {}".format(cost_mini))
+                        print("\t\tAccuracy: {}".format(accu_mini))
+
         to_save = tf.train.Saver()
 
         return to_save.save(sess, save_path)
