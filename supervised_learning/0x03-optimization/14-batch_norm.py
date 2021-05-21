@@ -25,4 +25,8 @@ def create_batch_norm_layer(prev, n, activation):
                                      scale=gamma,
                                      variance_epsilon=epsilon,
                                      name="batch_norm")
-    return activation(norm)
+    if activation:
+        a = activation(norm)
+    else:
+        a = norm
+    return a
