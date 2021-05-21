@@ -36,8 +36,8 @@ def create_placeholders(nx, classes):
 def create_layer(prev, n, activation):
     '''Creates a tensorflow layer
     Args:
-              prev: is the tensor output of the previous layer
-                 n: is the number of nodes in the layer to create
+        prev: is the tensor output of the previous layer
+        n: is the number of nodes in the layer to create
         activation: is the activation function that the layer should use
     Return: the tensor output of the layer
     '''
@@ -58,22 +58,19 @@ def create_batch_norm_layer(prev, n, activation):
     '''
     w = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
     layer = tf.layers.Dense(n, kernel_initializer=w, name="norm_layer")
-    mean, var = tf.nn.moments(layer(prev), axes=0)
-    beta = tf.Variable(tf.zeros(n), trainable=True)
-    gamma = tf.Variable(tf.ones(n), trainable=True)
+    layer = layer(prev)
+    mean, var = tf.nn.moments(layer, axes=[0])
+    beta = tf.Variable(tf.zeros([n]), trainable=True)
+    gamma = tf.Variable(tf.ones([n]), trainable=True)
     epsilon = 1e-8
-    norm = tf.nn.batch_normalization(x=layer(prev),
+    norm = tf.nn.batch_normalization(x=layer,
                                      mean=mean,
                                      variance=var,
                                      offset=beta,
                                      scale=gamma,
                                      variance_epsilon=epsilon,
                                      name="batch_norm")
-    if activation:
-        a = activation(norm)
-    else:
-        a = norm
-    return a
+    return activation(norm)
 
 
 def forward_prop(x, layer_sizes=[], activations=[]):
@@ -206,9 +203,9 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
 
     with tf.Session() as sess:
         global_step = tf.Variable(0, trainable=False)
-        alpha_d = learning_rate_decay(alpha, decay_rate, global_step,
-                                      decay_step=1)
-        train_op = create_Adam_op(loss, alpha_d, beta1, beta2, epsilon)
+        alpha = learning_rate_decay(alpha, decay_rate, global_step,
+                                    decay_step=1)
+        train_op = create_Adam_op(loss, alpha, beta1, beta2, epsilon)
         init = tf.global_variables_initializer()
         sess.run(init)
 
@@ -225,12 +222,11 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
 
             if epoch < epochs:
 
-                sess.run(tf.assign(global_step, epoch))
                 X_train_s, Y_train_s = shuffle_data(X_train, Y_train)
 
                 # MINI BATCH training:
                 m = X_train.shape[0]
-                sess.run(alpha_d)
+                sess.run(tf.assign(global_step, epoch))
                 for start in range(0, m, batch_size):
                     if (start + batch_size) < m:
                         X_train_m = X_train_s[start: start + batch_size]
@@ -251,5 +247,5 @@ def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
                         print("\tStep {}:".format(int(start / batch_size + 1)))
                         print("\t\tCost: {}".format(cost_mini))
                         print("\t\tAccuracy: {}".format(accu_mini))
-
+            saver = tf.train.Saver()
         return saver.save(sess, save_path)
