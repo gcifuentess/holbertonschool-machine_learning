@@ -1,10 +1,22 @@
 #!/usr/bin/env python3
 '''tensorflow deep neural network model module'''
 import tensorflow as tf
-create_Adam_op = __import__('10-Adam').create_Adam_op
-learning_rate_decay = __import__('12-learning_rate_decay').learning_rate_decay
-create_batch_norm_layer = __import__('14-batch_norm').create_batch_norm_layer
-shuffle_data = __import__('2-shuffle_data').shuffle_data
+import numpy as np
+
+
+def shuffle_data(X, Y):
+    '''shuffles the data points in two matrices the same way
+    Args:
+        X is the first numpy.ndarray of shape (m, nx) to shuffle
+            m is the number of data points
+            nx is the number of features in X
+        Y is the second numpy.ndarray of shape (m, ny) to shuffle
+            m is the same number of data points as in X
+            ny is the number of features in Y
+    Returns: the shuffled X and Y matrices
+    '''
+    shuffle = np.random.permutation(X.shape[0])
+    return X[shuffle], Y[shuffle]
 
 
 def create_placeholders(nx, classes):
@@ -33,6 +45,35 @@ def create_layer(prev, n, activation):
     layer = tf.layers.Dense(n, activation=activation, kernel_initializer=W,
                             name='layer')
     return layer(prev)
+
+
+def create_batch_norm_layer(prev, n, activation):
+    '''creates a batch normalization layer for a neural network in tensorflow
+    Args:
+        prev is the activated output of the previous layer
+        n is the number of nodes in the layer to be created
+    activation is the activation function that should be used on the
+                   output of the layer
+    Returns: a tensor of the activated output for the layer
+    '''
+    w = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
+    layer = tf.layers.Dense(n, kernel_initializer=w, name="norm_layer")
+    mean, var = tf.nn.moments(layer(prev), axes=0)
+    beta = tf.Variable(tf.zeros(n), trainable=True)
+    gamma = tf.Variable(tf.ones(n), trainable=True)
+    epsilon = 1e-8
+    norm = tf.nn.batch_normalization(x=layer(prev),
+                                     mean=mean,
+                                     variance=var,
+                                     offset=beta,
+                                     scale=gamma,
+                                     variance_epsilon=epsilon,
+                                     name="batch_norm")
+    if activation:
+        a = activation(norm)
+    else:
+        a = norm
+    return a
 
 
 def forward_prop(x, layer_sizes=[], activations=[]):
@@ -79,6 +120,45 @@ def calculate_accuracy(y, y_pred):
     cast = tf.cast(check, tf.float32)
     mean = tf.reduce_mean(cast, name="Mean")
     return mean
+
+
+def learning_rate_decay(alpha, decay_rate, global_step, decay_step):
+    '''creates a learning rate decay operation in tensorflow using inverse
+    time decay
+    Args:
+        alpha is the original learning rate
+        decay_rate is the weight used to determine the rate at which alpha
+                   will decay
+        global_step is the number of passes of gradient descent that have
+                    elapsed
+        decay_step is the number of passes of gradient descent that should
+                   occur before alpha is decayed further
+    Returns: the updated value for alpha
+    Important: the learning rate decay occurs in a stepwise fashion
+    '''
+    lrd = tf.train.inverse_time_decay(learning_rate=alpha,
+                                      global_step=global_step,
+                                      decay_steps=decay_step,
+                                      decay_rate=decay_rate,
+                                      staircase=True,
+                                      name="learning_rate_decay")
+    return lrd
+
+
+def create_Adam_op(loss, alpha, beta1, beta2, epsilon):
+    '''creates the training operation for a neural network in tensorflow using
+    the Adam optimization algorithm
+    Args:
+        loss is the loss of the network
+        alpha is the learning rate
+        beta1 is the weight used for the first moment
+        beta2 is the weight used for the second moment
+        epsilon is a small number to avoid division by zero
+    Returns: the Adam optimization operation
+    '''
+    optimizer = tf.train.AdamOptimizer(learning_rate=alpha, beta1=beta1,
+                                       beta2=beta2, epsilon=epsilon)
+    return optimizer.minimize(loss)
 
 
 def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9,
