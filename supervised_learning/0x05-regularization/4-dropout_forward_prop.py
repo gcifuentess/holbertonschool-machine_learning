@@ -31,9 +31,10 @@ def dropout_forward_prop(X, weights, L, keep_prob):
             _A = (2 / (1 + np.exp(-2 * Z))) - 1
             D = np.random.rand(_A.shape[0], _A.shape[1]) < keep_prob
             _A = np.multiply(_A, D)  # dropout
-            cache['A{}'.format(i)] = _A / keep_prob
+            cache['A{}'.format(i)] = _A / keep_prob  # inverted dropout
             cache['D{}'.format(i)] = D * 1
         else:
+            # with softmax activation function:
             T = np.exp(Z)
             cache['A{}'.format(i)] = T / np.sum(T, axis=0)
     return cache
