@@ -9,8 +9,8 @@ def l2_reg_gradient_descent(Y, weights, cache, alpha, lambtha, L):
     Args:
         Y is a one-hot numpy.ndarray of shape (classes, m) that contains the
           correct labels for the data
-        classes is the number of classes
-        m is the number of data points
+            classes is the number of classes
+            m is the number of data points
         weights is a dictionary of the weights and biases of the neural network
         cache is a dictionary of the outputs of each layer of the neural
               network
@@ -33,7 +33,8 @@ def l2_reg_gradient_descent(Y, weights, cache, alpha, lambtha, L):
     dbl = (1 / m) * np.sum(dZl, axis=1, keepdims=True)
     Wl_str = 'W{}'.format(len_cache - 1)
     Wl = weights[Wl_str]  # last W
-    weights[Wl_str] = Wl - alpha * dWl  # last layer W learning
+    # last layer W learning:
+    weights[Wl_str] = Wl - (alpha * lambtha / m) * Wl - alpha * dWl
     bl_str = 'b{}'.format(len_cache - 1)
     bl = weights[bl_str]  # last b
     weights[bl_str] = bl - alpha * dbl  # last layer b learning
