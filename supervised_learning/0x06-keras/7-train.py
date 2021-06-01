@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''Learning Rate Decay module'''
 import tensorflow.keras as K
 
