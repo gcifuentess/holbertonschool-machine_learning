@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''Early stopping module'''
 import tensorflow.keras as K
 
