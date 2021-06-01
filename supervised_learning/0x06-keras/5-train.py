@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''Validate module'''
 import tensorflow.keras as K
 
