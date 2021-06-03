@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-'''Convolution with Padding  module'''
+'''Convolution with Padding module'''
 import numpy as np
 
 
