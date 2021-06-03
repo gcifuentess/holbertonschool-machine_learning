@@ -36,29 +36,29 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
     stride_h = stride[0]
     stride_w = stride[1]
 
+    # SAME padding (default); when kernel h or w is even, add 1:
+    pad_top = int(((input_h - 1) * stride_h + kernel_h -
+                   input_h) / 2 + (kernel_h % 2 == 0))
+    pad_bottom = pad_top
+    pad_left = int(((input_w - 1) * stride_w + kernel_w -
+                    input_w) / 2 + (kernel_w % 2 == 0))
+    pad_right = pad_left
+
     if padding == 'valid':
         pad_top = 0
         pad_bottom = 0
         pad_left = 0
         pad_right = 0
-        output_h = (input_h - kernel_h) // stride_h + 1
-        output_w = (input_w - kernel_w) // stride_w + 1
-    elif padding == 'same':
-        pad_top = kernel_h // 2
-        pad_bottom = pad_top
-        pad_left = kernel_w // 2
-        pad_right = pad_left
-        output_h = (input_h // stride_h)
-        output_w = (input_w // stride_w)
     elif type(padding) == tuple:
         pad_top = padding[0]
         pad_bottom = pad_top
         pad_left = padding[1]
         pad_right = pad_left
-        output_h = (input_h + pad_top +
-                    pad_bottom - kernel_h) // stride_h + 1
-        output_w = (input_w + pad_left +
-                    pad_right - kernel_w) // stride_w + 1
+
+    output_h = int(np.floor((input_h + pad_top +
+                             pad_bottom - kernel_h) / stride_h) + 1)
+    output_w = int(np.floor((input_w + pad_left +
+                             pad_right - kernel_w) / stride_w) + 1)
 
     output = np.zeros([m, output_h, output_w])  # convolution output
     images_padded = np.pad(images, [(0, 0), (pad_top, pad_bottom),
