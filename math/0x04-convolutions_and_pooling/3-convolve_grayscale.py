@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 '''Strided Convolution module'''
 import numpy as np
-from math import floor
 
 
 def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
@@ -42,24 +41,24 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
         pad_bottom = 0
         pad_left = 0
         pad_right = 0
-        output_h = floor((input_h - kernel_h) / stride_h) + 1
-        output_w = floor((input_w - kernel_w) / stride_w) + 1
+        output_h = (input_h - kernel_h) // stride_h + 1
+        output_w = (input_w - kernel_w) // stride_w + 1
     elif padding == 'same':
         pad_top = kernel_h // 2
         pad_bottom = pad_top
         pad_left = kernel_w // 2
         pad_right = pad_left
-        output_h = floor(input_h / stride_h)
-        output_w = floor(input_w / stride_w)
+        output_h = (input_h // stride_h)
+        output_w = (input_w // stride_w)
     else:
         pad_top = padding[0]
         pad_bottom = pad_top
         pad_left = padding[1]
         pad_right = pad_left
-        output_h = floor((input_h + pad_top +
-                          pad_bottom - kernel_h) / stride_h) + 1
-        output_w = floor((input_w + pad_left +
-                          pad_right - kernel_w) / stride_w) + 1
+        output_h = (input_h + pad_top +
+                    pad_bottom - kernel_h) // stride_h + 1
+        output_w = (input_w + pad_left +
+                    pad_right - kernel_w) // stride_w + 1
 
     output = np.zeros([m, output_h, output_w])  # convolution output
     images_padded = np.pad(images, [(0, 0), (pad_top, pad_bottom),
