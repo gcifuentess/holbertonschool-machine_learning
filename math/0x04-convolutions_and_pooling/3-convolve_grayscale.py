@@ -50,7 +50,7 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
         pad_right = pad_left
         output_h = (input_h // stride_h)
         output_w = (input_w // stride_w)
-    else:
+    elif type(padding) == tuple:
         pad_top = padding[0]
         pad_bottom = pad_top
         pad_left = padding[1]
