@@ -24,8 +24,8 @@ def convolve_grayscale_same(images, kernel):
     kernel_h = kernel.shape[0]
     kernel_w = kernel.shape[1]
     bias = 0  # constant for now
-    padding_h = (kernel_h - 1) // 2
-    padding_w = (kernel_w - 1) // 2
+    padding_h = kernel_h // 2
+    padding_w = kernel_w // 2
     output_h = input_h + (2 * padding_h) - kernel_h + 1
     output_w = input_w + (2 * padding_w) - kernel_w + 1
 
