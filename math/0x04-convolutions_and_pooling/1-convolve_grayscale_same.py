@@ -30,9 +30,8 @@ def convolve_grayscale_same(images, kernel):
     output_w = input_w + (2 * padding_w) - kernel_w + 1
 
     output = np.zeros([m, output_h, output_w])  # convolution output
-    images_padded = np.zeros([m, input_h + 2 * padding_h,
-                             input_w + 2 * padding_w])
-    images_padded[:, padding_h: -padding_h, padding_w:-padding_w] = images
+    images_padded = np.pad(images, [(0, 0), (padding_h, padding_h),
+                                    (padding_h, padding_h)], mode="constant")
 
     for h in range(output_h):
         for w in range(output_w):
