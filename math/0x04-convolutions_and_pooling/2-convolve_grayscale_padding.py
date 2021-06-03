@@ -18,7 +18,7 @@ def convolve_grayscale_padding(images, kernel, padding):
         padding is a tuple of (ph, pw)
                 - ph is the padding for the height of the image
                 - pw is the padding for the width of the image
-    important: the image will be padded with 0’s
+    Important: the image will be padded with 0’s
     Returns: a numpy.ndarray containing the convolved images
     '''
     m = images.shape[0]
