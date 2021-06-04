@@ -39,12 +39,12 @@ def convolve_channels(images, kernel, padding='same', stride=(1, 1)):
     stride_h = stride[0]
     stride_w = stride[1]
 
-    # SAME padding (default); when kernel h or w is even, add 1:
-    pad_top = int(((input_h - 1) * stride_h + kernel_h -
-                   input_h) / 2 + (kernel_h % 2 == 0))
+    # SAME padding (default);
+    pad_top = int(np.ceil(((input_h - 1) * stride_h + kernel_h -
+                           input_h) / 2))
     pad_bottom = pad_top
-    pad_left = int(((input_w - 1) * stride_w + kernel_w -
-                    input_w) / 2 + (kernel_w % 2 == 0))
+    pad_left = int(np.ceil(((input_w - 1) * stride_w + kernel_w -
+                            input_w) / 2))
     pad_right = pad_left
 
     if padding == 'valid':
