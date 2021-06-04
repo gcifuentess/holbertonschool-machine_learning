@@ -70,18 +70,19 @@ def convolve(images, kernels, padding='same', stride=(1, 1)):
                                     (pad_left, pad_right), (0, 0)],
                            mode="constant")
 
-    h = 0
-    for i in range(0, output_h):
-        w = 0
-        for j in range(0, output_w):
-            current = images_padded[:, h: h + kernel_h, w: w + kernel_w, :]
-            # axes sum-reduction:
-            # https://stackoverflow.com/questions/41870228/...
-            # ...understanding-tensordot
-            output[:, i, j, :] = np.tensordot(current, kernels,
-                                              axes=([1, 2, 3],
-                                                    [0, 1, 2])) + bias
-            w += stride_w
-        h += stride_h
+    for k in range(n_kernels):
+        h = 0
+        for i in range(output_h):
+            w = 0
+            for j in range(output_w):
+                current = images_padded[:, h: h + kernel_h, w: w + kernel_w]
+                # axes sum-reduction:
+                # https://stackoverflow.com/questions/41870228/...
+                # ...understanding-tensordot
+                output[:, i, j, k] = np.tensordot(current, kernels[..., k],
+                                                  axes=([1, 2, 3],
+                                                        [0, 1, 2])) + bias
+                w += stride_w
+            h += stride_h
 
     return output
