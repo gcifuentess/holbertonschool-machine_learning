@@ -40,12 +40,12 @@ def convolve(images, kernels, padding='same', stride=(1, 1)):
     stride_h = stride[0]
     stride_w = stride[1]
 
-    # SAME padding (default); when kernel h or w is even, add 1:
+    # SAME padding (default); to homologate ceil(), add 1:
     pad_top = int(((input_h - 1) * stride_h + kernel_h -
-                   input_h) / 2 + (kernel_h % 2 == 0))
+                   input_h) / 2) + 1
     pad_bottom = pad_top
     pad_left = int(((input_w - 1) * stride_w + kernel_w -
-                    input_w) / 2 + (kernel_w % 2 == 0))
+                    input_w) / 2) + 1
     pad_right = pad_left
 
     if padding == 'valid':
@@ -69,19 +69,18 @@ def convolve(images, kernels, padding='same', stride=(1, 1)):
                                     (pad_left, pad_right), (0, 0)],
                            mode="constant")
 
-    for k in range(n_kernels):
-        h = 0
-        for i in range(output_h):
-            w = 0
-            for j in range(output_w):
-                current = images_padded[:, h: h + kernel_h, w: w + kernel_w, :]
-                # axes sum-reduction:
-                # https://stackoverflow.com/questions/41870228/...
-                # ...understanding-tensordot
-                output[:, i, j, k] = np.tensordot(current, kernels[..., k],
-                                                  axes=([1, 2, 3],
-                                                        [0, 1, 2])) + bias
-                w += stride_w
-            h += stride_h
+    h = 0
+    for i in range(output_h):
+        w = 0
+        for j in range(output_w):
+            current = images_padded[:, h: h + kernel_h, w: w + kernel_w, :]
+            # axes sum-reduction:
+            # https://stackoverflow.com/questions/41870228/...
+            # ...understanding-tensordot
+            output[:, i, j, :] = np.tensordot(current, kernels,
+                                              axes=([1, 2, 3],
+                                                    [0, 1, 2])) + bias
+            w += stride_w
+        h += stride_h
 
     return output
