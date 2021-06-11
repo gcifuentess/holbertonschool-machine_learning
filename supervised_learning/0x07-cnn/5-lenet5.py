@@ -26,8 +26,8 @@ def lenet5(X):
     w = K.initializers.he_normal(seed=None)
     l1 = K.layers.Conv2D(filters=6,
                          kernel_size=(5, 5),
-                         padding='same',
-                         activation='relu',
+                         padding="same",
+                         activation="relu",
                          kernel_initializer=w)(X)
 
     l2 = K.layers.MaxPool2D(pool_size=(2, 2),
@@ -35,8 +35,8 @@ def lenet5(X):
 
     l3 = K.layers.Conv2D(filters=16,
                          kernel_size=(5, 5),
-                         padding='valid',
-                         activation='relu',
+                         padding="valid",
+                         activation="relu",
                          kernel_initializer=w)(l2)
 
     l4 = K.layers.MaxPool2D(pool_size=(2, 2),
@@ -45,15 +45,15 @@ def lenet5(X):
     flatten = K.layers.Flatten()(l4)
 
     l5 = K.layers.Dense(units=120,
-                        activation='relu',
+                        activation="relu",
                         kernel_initializer=w)(flatten)
 
     l6 = K.layers.Dense(units=84,
-                        activation='relu',
+                        activation="relu",
                         kernel_initializer=w)(l5)
 
     output = K.layers.Dense(units=10,
-                            activation='softmax'
+                            activation="softmax",
                             kernel_initializer=w)(l6)
 
     model = K.Model(inputs=X, outputs=output)
