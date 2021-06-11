@@ -92,4 +92,4 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     # 3) bias gradient vector:
     db = np.sum(dZ, axis=(0, 1, 2), keepdims=True)
 
-    return dA_prev, dW, b
+    return dA_prev, dW, db
