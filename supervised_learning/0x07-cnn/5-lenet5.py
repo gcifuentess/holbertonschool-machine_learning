@@ -39,8 +39,8 @@ def lenet5(X):
                          activation='relu',
                          kernel_initializer=w)(l2)
 
-    l4 = K.layers.MaxPooling2D(pool_size=(2, 2),
-                               strides=(2, 2))(l3)
+    l4 = K.layers.MaxPool2D(pool_size=(2, 2),
+                            strides=(2, 2))(l3)
 
     flatten = K.layers.Flatten()(l4)
 
@@ -56,7 +56,7 @@ def lenet5(X):
                             activation='softmax'
                             kernel_initializer=w)(l6)
 
-    model = K.Model(inputs=X, outputs=layer)
+    model = K.Model(inputs=X, outputs=output)
     adam = K.optimizers.Adam()
     model.compile(optimizer=adam,
                   loss='categorical_crossentropy',
