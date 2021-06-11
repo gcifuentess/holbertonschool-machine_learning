@@ -37,9 +37,9 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     Returns: the partial derivatives with respect to the previous layer
              (dA_prev), the kernels (dW), and the biases (db), respectively
     '''
-    m, dZh, dZw, dZch = dZ.shape
-    _, ih, iw, ich = A_prev.shape
-    kh, kw, kch, f = W.shape
+    m, dZh, dZw, f = dZ.shape
+    m, ih, iw, ch = A_prev.shape
+    kh, kw, ch, f = W.shape
     sh, sw = stride
 
     if (padding == 'same'):
@@ -48,39 +48,48 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     elif (padding == 'valid'):
         ph = pw = 0
 
+    # 1) To calculate A_prev (input) gradient matrix:
     dA_prev = np.zeros_like(A_prev)
-    dW = np.zeros_like(W)
-    db = np.zeros_like(b)
 
-    A_prev_pad = np.pad(A_prev, ((0, ), (ph,), (pw,), (0,)), "constant")
-
-    for m_ in range(m):
-        for f_ in range(f):
-            for k in range(kh):
-                for l in range(kw):
-                    for i in range(dZh):
-                        for j in range(dZw):
-                            for c in range(kch):
-                                dW[k, l, c, f_] = (A_prev_pad[m_, sh * k + i,
-                                                              sw * l + j, c] *
-                                                   dZ[m_, i, j, f_])
-
-    dZ_pad = np.pad(dZ, ((0,), (kh - 1,), (kw - 1, ), (0,)), "constant")
-    dA_prev_pad = np.pad(A_prev, ((0, ), (ph,), (pw,), (0,)), "constant")
+    # 1.1) W rotation:
     Wr = np.rot90(m=W, k=2, axes=(0, 1))  # 180 degrees rotation
 
-    for m_ in range(m):
-        for f_ in range(f):
-            for k in range(ih + 2 * ph):
-                for l in range(iw + 2 * pw):
-                    for i in range(kh):
-                        for j in range(kw):
-                            for c in range(kch):
-                                dA_prev_pad[m_, k, l, c] = (dZ_pad[m_, k + i,
-                                                                   l + j, f_] *
-                                                            Wr[i, j, c, f_])
-    dA_prev_pad = dA_prev_pad[:, ph:-ph, pw:-pw, :]
+    # 1.2) dZ cero padding for convolution:
+    pdZh = int(np.ceil(((ih - 1) * 1 + kh - dZh) / 2))  # padding height
+    pdZw = int(np.ceil(((iw - 1) * 1 + kw - dZw) / 2))  # padding width
+    dZ_pad = np.pad(dZ, ((0, 0),
+                         (pdZh, pdZh),
+                         (pdZw, pdZw),
+                         (0, 0)), "constant")
 
-    db = np.sum(dZ, axis=(0, 1, 2))
+    # 1.3) Convolution, with dZ padded and W rotated:
+    for ch_ in range(ch):
+        for k in range(ih):
+            for l in range(iw):
+                current = dZ_pad[:, k: k + kh, l: l + kw, :]
+                dA_prev[:, k, l, ch_] = np.tensordot(current, Wr[..., ch_, :],
+                                                     axes=([1, 2, 3],
+                                                           [0, 1, 2]))
+
+    # 2) To talculate W gradient matrix:
+    dW = np.zeros_like(W)  # same shape as W
+    A_prev_pad = np.pad(A_prev, ((0, 0),
+                                 (ph, ph),
+                                 (pw, pw),
+                                 (0, 0)), "constant")  # input matrix padding
+
+    # 2.1) Convolution:
+    for f_ in range(f):
+        for i in range(kh):
+            for j in range(kw):
+                h = i * sh
+                w = j * sw
+                current = A_prev_pad[:, h: h + dZh, w: w + dZw, :]
+                dW[i, j, :, f_] = np.tensordot(current, dZ[..., f_],
+                                               axes=([0, 1, 2],
+                                                     [0, 1, 2]))
+
+    # 3) bias gradient vector:
+    db = np.sum(dZ, axis=(0, 1, 2), keepdims=True)
 
     return dA_prev, dW, b
