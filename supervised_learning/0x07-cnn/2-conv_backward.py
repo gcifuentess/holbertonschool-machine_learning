@@ -74,21 +74,21 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
 
     # 2) To talculate W gradient matrix:
     dW = np.zeros_like(W)  # same shape as W
-    A_prev_pad = np.pad(A_prev, ((0, 0),
-                                 (ph, ph),
-                                 (pw, pw),
-                                 (0, 0)), "constant")  # input matrix padding
+    A_prev_pad = np.pad(A_prev,
+                        ((0,), (ph,), (pw,), (0,)),
+                        mode="constant")  # input matrix padding
 
-    # 2.1) Convolution:
-    for f_ in range(f):
-        for i in range(kh):
-            for j in range(kw):
-                h = i * sh
-                w = j * sw
-                current = A_prev_pad[:, h: h + dZh, w: w + dZw, :]
-                dW[i, j, :, f_] = np.tensordot(current, dZ[..., f_],
-                                               axes=([0, 1, 2],
-                                                     [0, 1, 2]))
+    # 2.1) Convolution (unefficient):
+    for m_ in range(m):
+        for f_ in range(f):
+            for i in range(dZh):
+                for j in range(dZw):
+                    h = i * sh
+                    w = j * sw
+                    current = A_prev_pad[m_, h: h + kh, w: w + kw, :]
+                    dW[..., f_] += np.multiply(current,
+                                               dZ[m_, i, j, f_],
+                                               dtype="float32")
 
     # 3) bias gradient vector:
     db = np.sum(dZ, axis=(0, 1, 2), keepdims=True)
