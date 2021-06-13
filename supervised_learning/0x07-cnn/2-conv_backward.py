@@ -49,7 +49,8 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
         ph = pw = 0
 
     # 1) To calculate A_prev (input) gradient matrix:
-    dA_prev = np.zeros_like(A_prev)
+    dA_prev = np.zeros_like(A_prev)  # dtype float32, needs transformation
+    dA_prev = dA_prev.astype("float64")  # dtype transformation
 
     # 1.1) W rotation:
     Wr = np.rot90(m=W, k=2, axes=(0, 1))  # 180 degrees rotation
