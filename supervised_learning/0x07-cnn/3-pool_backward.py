@@ -49,8 +49,7 @@ def pool_backward(dA, A_prev, kernel_shape, stride=(1, 1), mode='max'):
                         kernel = (current == np.max(current))
                         dA_prev[m_, h: h + sh, w: w + sw, ch_] += (gradient *
                                                                    kernel)
-                    elif mode == "avg":
+                    if mode == "avg":
                         dA_prev[m_, h: h + sh, w: w + sw, ch_] += (gradient /
                                                                    kh / kw)
-
     return dA_prev
