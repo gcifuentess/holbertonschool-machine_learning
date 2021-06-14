@@ -30,26 +30,23 @@ def pool_backward(dA, A_prev, kernel_shape, stride=(1, 1), mode='max'):
      Returns: the partial derivatives with respect to the previous layer
               (dA_prev)
     '''
-    m, dAh, dAw, ch = dA.shape
+    m, h_new, w_new, c_new = dA.shape
     kh, kw = kernel_shape
     sh, sw = stride
 
-    dA_prev = np.zeros(A_prev.shape)  # same shape as A_prev
+    dA_prev = np.zeros(A_prev.shape)
 
-    for m_ in range(m):
-        for i in range(dAh):
-            for j in range(dAw):
-                for ch_ in range(ch):
-                    h = i * sh
-                    w = j * sw
-                    current = A_prev[m_, h: h + sh, w: w + sw, ch_]
-                    gradient = dA[m_, i, j, ch_]
-
-                    if mode == "max":
-                        kernel = (current == np.max(current))
-                        dA_prev[m_, h: h + sh, w: w + sw, ch_] += (gradient *
-                                                                   kernel)
-                    if mode == "avg":
-                        dA_prev[m_, h: h + sh, w: w + sw, ch_] += (gradient /
-                                                                   kh / kw)
+    for i in range(m):
+        for h in range(h_new):
+            for w in range(w_new):
+                for c in range(c_new):
+                    s_h = h * sh
+                    s_w = w * sw
+                    box = dA[i, h, w, c]
+                    if mode == 'max':
+                        tmp = A_prev[i, s_h:kh+s_h, s_w:kw+s_w, c]
+                        mask = (tmp == np.max(tmp))
+                        dA_prev[i, s_h:kh+s_h, s_w:kw+s_w, c] += box * mask
+                    if mode == 'avg':
+                        dA_prev[i, s_h:kh+s_h, s_w:kw+s_w, c] += box/kh/kw
     return dA_prev
