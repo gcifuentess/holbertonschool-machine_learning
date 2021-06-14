@@ -30,27 +30,25 @@ def pool_backward(dA, A_prev, kernel_shape, stride=(1, 1), mode='max'):
      Returns: the partial derivatives with respect to the previous layer
               (dA_prev)
     '''
-    m, dAh, dAw, c = dA.shape
-    m, ih, iw, ich = A_prev.shape
+    m, dAh, dAw, f = dA.shape
+    m, ih, iw, ch = A_prev.shape
     kh, kw = kernel_shape
     sh, sw = stride
-    ph = pw = 0
 
-    oh = int(np.floor((ih + ph * 2 - kh) / sh) + 1)  # output matrix heght
-    ow = int(np.floor((iw + pw * 2 - kw) / sw) + 1)  # output matrix width
+    dA_prev = np.zeros_like(A_prev)  # same shape as A_prev
 
-    output = np.zeros([m, oh, ow, ich])  # convolution output
+    for m_ in range(m):
+        for i in range(dAh):
+            for j in range(dAw):
+                h = i * sh
+                w = j * sw
+                current = A_prev[m_, h: h + sh, w: w + sw, :]
+                gradient = dA[m_, i, j, :]
 
-    h = 0
-    for i in range(oh):
-        w = 0
-        for j in range(ow):
-            h = i * sh
-            w = j * sw
-            current = A_prev[:, h: h + kh, w: w + kw, :]
-            if mode == 'max':
-                output[:, i, j, :] = np.amax(current, (1, 2))
-            elif mode == 'avg':
-                output[:, i, j, :] = np.average(current, (1, 2))
+                if mode == "max":
+                    kernel = (current == np.amax(current, (0, 1)))
+                    dA_prev[m_, h: h + sh, w: w + sw, :] = kernel * gradient
+                elif mode == "avg":
+                    dA_prev[m_, h: h + sh, w: w + sw, :] = gradient / kh / kw
 
-    return output
+    return dA_prev
