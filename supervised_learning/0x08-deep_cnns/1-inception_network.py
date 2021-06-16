@@ -29,14 +29,14 @@ def inception_network():
 
     l1 = K.layers.Conv2D(filters=64,
                          kernel_size=(7, 7),
-                         strides=2,
-                         padding="valid",
+                         strides=(2, 2),
+                         padding="same",
                          activation="relu",
                          kernel_initializer=w)(inputs)
 
     l2 = K.layers.MaxPool2D(pool_size=(3, 3),
                             strides=2,
-                            padding='same')(l1)
+                            padding="same")(l1)
 
     l3 = K.layers.Conv2D(filters=64,
                          kernel_size=(1, 1),
@@ -54,7 +54,7 @@ def inception_network():
 
     l4 = K.layers.MaxPool2D(pool_size=(3, 3),
                             strides=2,
-                            padding='same')(l3)
+                            padding="same")(l3)
 
     l5 = inception_block(l4, inception3a)
 
@@ -62,7 +62,7 @@ def inception_network():
 
     l7 = K.layers.MaxPool2D(pool_size=(3, 3),
                             strides=2,
-                            padding='same')(l6)
+                            padding="same")(l6)
 
     l8 = inception_block(l7, inception4a)
 
@@ -76,7 +76,7 @@ def inception_network():
 
     l13 = K.layers.MaxPool2D(pool_size=(3, 3),
                              strides=2,
-                             padding='same')(l12)
+                             padding="same")(l12)
 
     l14 = inception_block(l13, inception5a)
 
@@ -84,12 +84,12 @@ def inception_network():
 
     l16 = K.layers.AveragePooling2D(pool_size=(7, 7),
                                     strides=1,
-                                    padding='valid')(l15)
+                                    padding="valid")(l15)
 
     l17 = K.layers.Dropout(.4)(l16)
 
     l18 = K.layers.Dense(units=1000,
-                         activation='softmax',
+                         activation="softmax",
                          kernel_initializer=w)(l17)
 
     return K.Model(inputs=inputs, outputs=l18)
