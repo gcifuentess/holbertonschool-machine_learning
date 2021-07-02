@@ -2,7 +2,6 @@
 '''YOLO Object Detection Module'''
 import tensorflow.keras as K
 import numpy as np
-from glob import glob
 
 
 class Yolo():
@@ -91,8 +90,8 @@ class Yolo():
             confidence = np.empty((grid_h, grid_w, n_b, 1))
             classes_probs = np.empty((grid_h, grid_w, n_b, n_classes))
 
-            for row in range(grid_h):
-                for col in range(grid_w):
+            for col in range(grid_w):
+                for row in range(grid_h):
                     for b in range(n_b):
 
                         t_x, t_y, t_w, t_h = output[row][col][b][:4]
