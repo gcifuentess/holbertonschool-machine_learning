@@ -295,10 +295,23 @@ class Yolo():
         '''
         input_h, input_w = (416, 416)  # input hight and width for Darknet
 
-        pimages = np.array([cv2.resize(x,
-                                       (input_h, input_w),
-                                       interpolation=cv2.INTER_CUBIC)
-                            for x in images])
-        image_shapes = np.array([(x.shape[0], x.shape[1]) for x in images])
+        pimages = []
+        image_shapes = []
+
+        for img in images:
+            pimg = cv2.resize(img,
+                              (input_h, input_w),
+                              interpolation=cv2.INTER_CUBIC)
+            pimg = cv2.normalize(pimg,
+                                 None,
+                                 alpha=0,
+                                 beta=1,
+                                 norm_type=cv2.NORM_MINMAX)
+            img_shape = (img.shape[0], img.shape[1])
+            pimages.append(pimg)
+            image_shapes.append(img_shape)
+
+        pimages = np.array(pimages)
+        image_shapes = np.array(image_shapes)
 
         return (pimages, image_shapes)
