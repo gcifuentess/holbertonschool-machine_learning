@@ -274,7 +274,7 @@ class Yolo():
         return (images, image_paths)
 
     def preprocess_images(self, images):
-        '''preprocess images to fit in the darknet model
+        '''preprocess images to fit in the model
         Args:
             images: a list of images as numpy.ndarrays
         Important:
@@ -293,22 +293,26 @@ class Yolo():
                                  the original height and width of the images
                                  - 2 => (image_height, image_width)
         '''
-        input_h, input_w = (416, 416)  # input hight and width for Darknet
+        # Capture the input size of the model
+        # for Darknet it is 416x416
+        input_h, input_w = self.model.inputs[0].shape.as_list()[1:3]
 
         pimages = []
         image_shapes = []
 
         for img in images:
+
+            # Resize image:
             pimg = cv2.resize(img,
                               (input_h, input_w),
                               interpolation=cv2.INTER_CUBIC)
-            pimg = cv2.normalize(pimg,
-                                 None,
-                                 alpha=0,
-                                 beta=1,
-                                 norm_type=cv2.NORM_MINMAX)
-            img_shape = (img.shape[0], img.shape[1])
+
+            # Normalize image:
+            pimg = pimg / 255
             pimages.append(pimg)
+
+            # Original shape:
+            img_shape = (img.shape[0], img.shape[1])
             image_shapes.append(img_shape)
 
         pimages = np.array(pimages)
