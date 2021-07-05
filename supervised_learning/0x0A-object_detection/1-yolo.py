@@ -71,50 +71,45 @@ class Yolo():
             return 1 / (1 + np.exp(-x))
 
         input_h, input_w = self.model.inputs[0].shape.as_list()[1:3]
+        image_h, image_w = image_size
 
         boxes = []
         box_confidences = []
         box_class_probs = []
 
-        for i in range(len(outputs)):
-            output = outputs[i]
+        for i, output in enumerate(outputs):
 
             grid_h, grid_w = output.shape[:2]
-            n_b = output.shape[2]  # YOLOv3 preds boxes at 3 different scales
-            n_classes = output.shape[-1] - 4 - 1
 
             output[..., :2] = _sigmoid(output[..., :2])  # sig for t_x & t_y
             output[..., 4:] = _sigmoid(output[..., 4:])  # sig for all probs
 
-            box = np.empty((grid_h, grid_w, n_b, 4))
-            confidence = np.empty((grid_h, grid_w, n_b, 1))
-            classes_probs = np.empty((grid_h, grid_w, n_b, n_classes))
+            t_xy = output[..., 0:2]
+            t_wh = output[..., 2:4]
 
-            for col in range(grid_w):
-                for row in range(grid_h):
-                    for b in range(n_b):
+            anchors = self.anchors[i]
 
-                        t_x, t_y, t_w, t_h = output[row][col][b][:4]
-                        b_x = (t_x + col) / grid_w  # center x position
-                        b_y = (t_y + row) / grid_h  # center y position
+            # -- Build the C_xy matrix (The grid for every anchor) --
+            # look Darknet e.g first scale shape transformation:
+            C_xy = np.indices((grid_w, grid_h))  # shape (2,13,13)
+            C_xy = np.expand_dims(C_xy, axis=-1)  # shape (2,13,13,1)
+            C_xy_ = C_xy.copy()
+            for i in range(anchors.shape[0] - 1):  # shape (2,13,13,3)
+                C_xy = np.concatenate((C_xy, C_xy_), axis=-1)
+            C_xy = np.transpose(C_xy, axes=[1, 2, 3, 0])  # shape (13,13,3,2)
 
-                        anchor = self.anchors[i][b]
-                        pw = anchor[0]
-                        b_w = (pw * np.exp(t_w)) / input_w
-                        ph = anchor[1]
-                        b_h = (ph * np.exp(t_h)) / input_h
+            # Correct offset of the center points:
+            b_xy = (t_xy + C_xy) / (grid_w, grid_h)
+            # Correct offset of boxes dimensions:
+            b_wh = (anchors * np.exp(t_wh)) / (input_w, input_h)
 
-                        x1 = (b_x - b_w / 2) * image_size[1]
-                        x2 = (b_x + b_w / 2) * image_size[1]
-                        y1 = (b_y - b_h / 2) * image_size[0]
-                        y2 = (b_y + b_h / 2) * image_size[0]
+            # boxes coordinates with respect to the input image:
+            xy1 = (b_xy - b_wh / 2) * (image_w, image_h)
+            xy2 = (b_xy + b_wh / 2) * (image_w, image_h)
 
-                        box[row, col, b, :] = [x1, y1, x2, y2]
-                        confidence[row, col, b] = output[row][col][b][4]
-                        classes_probs[row, col, b] = output[row][col][b][5:]
-
-            boxes.append(box)
-            box_confidences.append(confidence)
-            box_class_probs.append(classes_probs)
+            boxes.append(np.concatenate((xy1, xy2), axis=-1))
+            confidences = np.expand_dims(output[..., 4], axis=-1)
+            box_confidences.append(confidences)
+            box_class_probs.append(output[..., 5:])
 
         return (boxes, box_confidences, box_class_probs)
