@@ -90,13 +90,16 @@ class Yolo():
             anchors = self.anchors[i]
 
             # -- Build the C_xy matrix (The grid for every anchor) --
-            # look Darknet e.g first scale shape transformation:
-            C_xy = np.indices((grid_w, grid_h))  # shape (2,13,13)
-            C_xy = np.expand_dims(C_xy, axis=-1)  # shape (2,13,13,1)
-            C_xy_ = C_xy.copy()
-            for i in range(anchors.shape[0] - 1):  # shape (2,13,13,3)
-                C_xy = np.concatenate((C_xy, C_xy_), axis=-1)
-            C_xy = np.transpose(C_xy, axes=[1, 2, 3, 0])  # shape (13,13,3,2)
+            # # look Darknet e.g first scale shape transformation:
+            # C_xy = np.indices((grid_w, grid_h))  # shape (2,13,13)
+            # C_xy = np.expand_dims(C_xy, axis=-1)  # shape (2,13,13,1)
+            # C_xy_ = C_xy.copy()
+            # for i in range(anchors.shape[0] - 1):  # shape (2,13,13,3)
+            #     C_xy = np.concatenate((C_xy, C_xy_), axis=-1)
+            # C_xy = np.transpose(C_xy, axes=[1, 2, 3, 0])  # shape (13,13,3,2)
+            C_xy = np.tile(np.indices((grid_w, grid_h)).T,
+                           anchors.shape[0]).reshape(
+                               (grid_h, grid_w) + anchors.shape)
 
             # Correct offset of the center points:
             b_xy = (t_xy + C_xy) / (grid_w, grid_h)
