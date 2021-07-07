@@ -39,10 +39,12 @@ class NST():
             raise TypeError("content_image must be a numpy.ndarray "
                             "with shape (h, w, 3)")
 
-        if (alpha < 0 or type(alpha) not int or type(alpha) not float):
+        print("alpha", type(alpha))
+        if (alpha < 0 or type(alpha) not in [int, float]):
             raise ValueError("alpha must be a non-negative number")
 
-        if (beta < 0 or type(beta) not int or type(beta) not float):
+        print("beta", type(beta))
+        if (beta < 0 or type(beta) not in [int, float]):
             raise ValueError("beta must be a non-negative number")
 
         # enable eager execution:
