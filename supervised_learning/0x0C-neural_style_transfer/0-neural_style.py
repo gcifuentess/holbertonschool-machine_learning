@@ -30,7 +30,7 @@ class NST():
         if (type(style_image) is not np.ndarray or
                 style_image.ndim != 3 or
                 style_image.shape[2] != 3):
-            raise TypeError("style_image must be a numpy.ndarray"
+            raise TypeError("style_image must be a numpy.ndarray "
                             "with shape (h, w, 3)")
 
         if (type(content_image) is not np.ndarray or
@@ -39,10 +39,10 @@ class NST():
             raise TypeError("content_image must be a numpy.ndarray "
                             "with shape (h, w, 3)")
 
-        if (alpha < 0):
+        if (alpha < 0 or type(alpha) not int or type(alpha) not float):
             raise ValueError("alpha must be a non-negative number")
 
-        if (beta < 0):
+        if (beta < 0 or type(beta) not int or type(beta) not float):
             raise ValueError("beta must be a non-negative number")
 
         # enable eager execution:
