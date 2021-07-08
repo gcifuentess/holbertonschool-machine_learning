@@ -211,7 +211,7 @@ class NST():
             raise TypeError("style_outputs must be a list with a "
                             "length of {}".format(len_style_layers))
 
-        weight = self.beta / len_style_layers
+        weight = 1 / len_style_layers
         layer_style_costs = []
 
         gram_targets = self.gram_style_features
