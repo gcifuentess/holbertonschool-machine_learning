@@ -166,7 +166,7 @@ class NST():
 
         n_style_layers = len(self.style_layers)
         style_layers = self.model(p_style_image)[:n_style_layers]
-        content_layer = self.model(p_content_image)[n_style_layers:][0]
+        content_layer = self.model(p_content_image)[-1]
 
         self.gram_style_features = [self.gram_matrix(layer)
                                     for layer in style_layers]
