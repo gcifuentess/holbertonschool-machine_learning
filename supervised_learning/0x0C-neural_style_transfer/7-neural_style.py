@@ -267,4 +267,4 @@ class NST():
         content_cost = self.content_cost(content_output)
 
         total_c = style_cost * self.beta + content_cost * self.alpha
-        return (style_cost + content_cost, content_cost, style_cost)
+        return (total_c, content_cost, style_cost)
