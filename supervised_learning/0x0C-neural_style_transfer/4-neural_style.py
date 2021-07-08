@@ -192,7 +192,7 @@ class NST():
                 tf.rank(gram_target).numpy() != 3 or
                 gram_target.shape != (1, channels, channels)):
             raise TypeError("gram_target must be a tensor of "
-                            "shape [1, {c}, {c}]")
+                            "shape [1, {}, {}]".format(channels, channels))
 
         gram_style = self.gram_matrix(style_output)
 
