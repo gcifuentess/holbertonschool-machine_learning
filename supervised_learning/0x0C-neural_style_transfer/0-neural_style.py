@@ -79,7 +79,7 @@ class NST():
         # resize image
         image_t = tf.image.resize_bicubic(
             images=image,
-            size=[round(h * scale), round(w * scale)],
+            size=[int(h * scale), int(w * scale)],
         )
 
         # normalize image:
