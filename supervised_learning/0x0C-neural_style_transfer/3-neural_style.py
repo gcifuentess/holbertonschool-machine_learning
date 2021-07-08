@@ -155,12 +155,13 @@ class NST():
     def generate_features(self):
         '''extracts the features used to calculate neural style cost'''
 
-        # preprocess images
+        # Preprocess images
+        # expects input in [0,1] so image is multiplied by 255
         p_style_image = tf.keras.applications.vgg19.preprocess_input(
-            self.style_image * 255.0,
+            self.style_image * 255,
         )
         p_content_image = tf.keras.applications.vgg19.preprocess_input(
-            self.content_image * 255.0,
+            self.content_image * 255,
         )
 
         n_style_layers = len(self.style_layers)
