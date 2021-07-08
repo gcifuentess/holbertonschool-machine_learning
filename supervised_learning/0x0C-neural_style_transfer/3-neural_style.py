@@ -164,12 +164,9 @@ class NST():
             self.content_image * 255,
         )
 
-        style_features = self.model(p_style_image)[:-1]
-        content_feature = self.model(p_content_image)[-1]
+        n_style_layers = len(self.style_layers)
+        style_features = self.model(p_style_image)[:n_style_layers]
 
-        gram_style_features = [self.gram_matrix(style_feature)
-                               for style_feature in style_features]
-        content_feature = self.gram_matrix(content_feature)
-
-        self.gram_style_features = gram_style_features
-        self.content_feature = content_feature
+        self.content_feature = self.model(p_content_image)[n_style_layers:][0]
+        self.gram_style_features = [self.gram_matrix(style_feature)
+                                    for style_feature in style_features]
