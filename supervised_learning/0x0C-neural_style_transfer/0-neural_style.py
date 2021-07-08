@@ -39,17 +39,17 @@ class NST():
             raise TypeError("content_image must be a numpy.ndarray "
                             "with shape (h, w, 3)")
 
-        if (alpha < 0 or type(alpha) not in [int, float]):
+        if (type(alpha) not in [int, float] or alpha < 0):
             raise ValueError("alpha must be a non-negative number")
 
-        if (beta < 0 or type(beta) not in [int, float]):
+        if (type(beta) not in [int, float] or beta < 0):
             raise ValueError("beta must be a non-negative number")
 
         # enable eager execution:
         tf.enable_eager_execution()
 
-        self.style_image = NST.scale_image(style_image)
-        self.content_image = NST.scale_image(content_image)
+        self.style_image = self.scale_image(style_image)
+        self.content_image = self.scale_image(content_image)
         self.alpha = alpha
         self.beta = beta
 
