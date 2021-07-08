@@ -135,11 +135,17 @@ class NST():
         if (tf.rank(input_layer).numpy() != 4):
             raise TypeError("input_layer must be a tensor of rank 4")
 
-        a = input_layer
-        gram = tf.tensordot(a, a, [[0, 1, 2], [0, 1, 2]])
+        # === way 1 - one checker wrong ===
+        # a = input_layer
+        # gram = tf.tensordot(a, a, [[0, 1, 2], [0, 1, 2]])
+
+        # === way 2 ===
+        channels = int(input_layer.shape[-1])
+        a = tf.reshape(input_layer, [-1, channels])
+        gram = tf.matmul(a, a, transpose_a=True)
 
         # normalize gram matrix
-        n = tf.cast(a.shape[1] * a.shape[2], tf.float32)
+        n = tf.cast(input_layer.shape[1] * input_layer.shape[2], tf.float32)
         gram_normalized = gram / n
 
         return tf.expand_dims(gram_normalized, axis=0)
