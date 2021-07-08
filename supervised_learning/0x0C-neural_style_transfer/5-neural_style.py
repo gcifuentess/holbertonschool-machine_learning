@@ -212,13 +212,13 @@ class NST():
                             "length of {}".format(len_style_layers))
 
         weight = 1 / len_style_layers
-        layer_style_costs = []
+        weighted_layer_style_costs = []
 
         gram_targets = self.gram_style_features
 
         for i, s_output in enumerate(style_outputs):
-            layer_style_costs.append(
-                self.layer_style_cost(s_output, gram_targets[i])
+            weighted_layer_style_costs.append(
+                self.layer_style_cost(s_output, gram_targets[i]) * weight
             )
 
-        return tf.add_n(layer_style_costs) * weight
+        return tf.add_n(weighted_layer_style_costs)
