@@ -157,26 +157,16 @@ class NST():
 
         # Preprocess images
         # expects input in [0,1] so image is multiplied by 255
-        # p_style_image = tf.keras.applications.vgg19.preprocess_input(
-        #     self.style_image * 255,
-        # )
-        # p_content_image = tf.keras.applications.vgg19.preprocess_input(
-        #     self.content_image * 255,
-        # )
+        p_style_image = tf.keras.applications.vgg19.preprocess_input(
+            self.style_image * 255,
+        )
+        p_content_image = tf.keras.applications.vgg19.preprocess_input(
+            self.content_image * 255,
+        )
 
-        # n_style_layers = len(self.style_layers)
-        # style_layers = self.model(p_style_image)[:n_style_layers]
-        # content_layer = self.model(p_content_image)[-1]
+        style_layers = self.model(p_style_image)[:-1]
+        content_layer = self.model(p_content_image)[-1]
 
-        # self.gram_style_features = [self.gram_matrix(layer)
-        #                             for layer in style_layers]
-        # self.content_feature = self.gram_matrix(content_layer)
-        prepro_style = tf.keras.applications.\
-            vgg19.preprocess_input(self.style_image * 255)
-        prepro_content = tf.keras.applications.\
-            vgg19.preprocess_input(self.content_image * 255)
-        style_features = self.model(prepro_style)[:-1]
-        content_feature = self.model(prepro_content)[-1]
-        self.gram_style_features = [self.gram_matrix(i)
-                                    for i in style_features]
-        self.content_feature = content_feature
+        self.gram_style_features = [self.gram_matrix(layer)
+                                    for layer in style_layers]
+        self.content_feature = self.gram_matrix(content_layer)
