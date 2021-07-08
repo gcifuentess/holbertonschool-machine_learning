@@ -91,15 +91,31 @@ class NST():
 
     def load_model(self):
         '''creates the model used to calculate cost'''
-        vgg = tf.keras.applications.vgg19.VGG19(
-            include_top=False,
-            weights='imagenet',
-        )
-        vgg.trainable = False
 
-        style_outputs = [vgg.get_layer(name).output
-                         for name in self.style_layers]
-        content_outputs = [vgg.get_layer(self.content_layer).output]
+        style_outputs = []
+        content_outputs = []
+
+        vgg = tf.keras.applications.VGG19(
+            include_top=False,
+        )
+
+        for i, layer in enumerate(vgg.layers):
+            if (i == 0):
+                output = vgg.input
+                continue
+            if (type(layer) is tf.keras.layers.MaxPooling2D):
+                layer = tf.keras.layers.AveragePooling2D(
+                    pool_size=layer.pool_size,
+                    strides=layer.strides,
+                    padding=layer.padding,
+                    name=layer.name,
+                )
+            output = layer(output)
+            layer.trainable = False
+            if (layer.name in self.style_layers):
+                style_outputs.append(output)
+            if (layer.name == self.content_layer):
+                content_outputs.append(output)
 
         model_outputs = style_outputs + content_outputs
 
