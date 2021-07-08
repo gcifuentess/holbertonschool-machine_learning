@@ -132,7 +132,11 @@ class NST():
             input_layer
         '''
 
-        if (tf.rank(input_layer).numpy() != 4):
+        # === way 1 - one checker wrong ===
+        # if (tf.rank(input_layer).numpy() != 4):
+        #     raise TypeError("input_layer must be a tensor of rank 4")
+
+        if (len(input_layer.shape) != 4):
             raise TypeError("input_layer must be a tensor of rank 4")
 
         # === way 1 - one checker wrong ===
