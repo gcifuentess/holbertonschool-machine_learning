@@ -40,10 +40,10 @@ class NST():
                             "with shape (h, w, 3)")
 
         if (type(alpha) not in [int, float] or alpha < 0):
-            raise ValueError("alpha must be a non-negative number")
+            raise TypeError("alpha must be a non-negative number")
 
         if (type(beta) not in [int, float] or beta < 0):
-            raise ValueError("beta must be a non-negative number")
+            raise TypeError("beta must be a non-negative number")
 
         # enable eager execution:
         tf.enable_eager_execution()
@@ -79,7 +79,7 @@ class NST():
         # resize image
         image_t = tf.image.resize_bicubic(
             images=image,
-            size=[int(h * scale), int(w * scale)],
+            size=[round(h * scale), round(w * scale)],
         )
 
         # normalize image:
