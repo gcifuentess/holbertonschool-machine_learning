@@ -207,11 +207,12 @@ class NST():
         '''
         len_style_layers = len(self.style_layers)
 
-        if (len(style_outputs) != len_style_layers):
+        if (type(style_outputs) is not list or
+                len(style_outputs) != len_style_layers):
             raise TypeError("style_outputs must be a list with a "
                             "length of {}".format(len_style_layers))
 
-        weight = 1.0 / float(len_style_layers)
+        weight = 1 / (len_style_layers - 1)
         weighted_layer_style_costs = []
 
         gram_targets = self.gram_style_features
