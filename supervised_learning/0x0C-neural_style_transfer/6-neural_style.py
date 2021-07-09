@@ -238,4 +238,4 @@ class NST():
             raise TypeError("content_output must be a tensor of "
                             "shape {}".format(content_shape))
 
-        return tf.reduce_mean(tf.square(self.content_feature - content_output))
+        return tf.reduce_mean(tf.square(content_output - self.content_feature))
