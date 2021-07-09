@@ -346,7 +346,7 @@ class NST():
 
         opt = tf.train.AdamOptimizer(
             learning_rate=lr,
-            beta1=beta1
+            beta1=beta1,
             beta2=beta2,
         )
 
