@@ -238,7 +238,7 @@ class NST():
             raise TypeError("content_output must be a tensor of "
                             "shape {}".format(content_shape))
 
-        return tf.reduce_mean(tf.square(self.content_feature - content_output))
+        return tf.reduce_mean(tf.square(content_output - self.content_feature))
 
     def total_cost(self, generated_image):
         '''Calculates the total cost for the generated image
@@ -257,6 +257,10 @@ class NST():
                 generated_image.shape != content_image_shape):
             raise TypeError("generated_image must be a tensor of "
                             "shape {}".format(content_image_shape))
+
+        generated_image = tf.keras.applications.vgg19.preprocess_input(
+            generated_image * 255
+        )
 
         outputs = self.model(generated_image)
 
