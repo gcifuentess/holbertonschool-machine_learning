@@ -297,5 +297,4 @@ class NST():
             loss = self.total_cost(generated_image)
         gradients = tape.gradient(loss[0], generated_image)
 
-        print(content_image_shape, generated_image.shape)
         return gradients, loss[0], loss[1], loss[2]
