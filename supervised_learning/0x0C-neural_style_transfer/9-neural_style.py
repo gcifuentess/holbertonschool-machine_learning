@@ -139,18 +139,25 @@ class NST():
             raise TypeError("input_layer must be a tensor of rank 4")
 
         # === way 1 ===
-        gram = tf.tensordot(a, a, [[0, 1, 2], [0, 1, 2]])
+        # gram = tf.tensordot(a, a, [[0, 1, 2], [0, 1, 2]])
 
         # === way 2 ===
         # channels = int(a.shape[-1])
         # a_ = tf.reshape(a, [-1, channels])
         # gram = tf.matmul(a_, a_, transpose_a=True)
 
+        # === way 3 - esinstain notation ===
+        # b: batch, h:height, w:width, c: channels, s: second_channels
+        gram = tf.linalg.einsum("bhwc,bhws->bcs", a, a)
+
         # normalize gram matrix
         n = tf.cast(a.shape[1] * a.shape[2], tf.float32)
         gram_normalized = gram / n
 
-        return tf.expand_dims(gram_normalized, axis=0)
+        # for ways 1 & 2 - to recover the batch dimension
+        #gram_normalized = tf.expand_dims(gram_normalized, axis=0)
+
+        return gram_normalized
 
     def generate_features(self):
         '''extracts the features used to calculate neural style cost'''
