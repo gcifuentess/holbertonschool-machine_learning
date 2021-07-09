@@ -344,7 +344,11 @@ class NST():
 
         generated_image = self.content_image
 
-        opt = tf.train.AdamOptimizer(learning_rate=lr, beta1=beta1, beta2=beta2)
+        opt = tf.train.AdamOptimizer(
+            learning_rate=lr,
+            beta1=beta1
+            beta2=beta2,
+        )
         best_loss = tf.cast(0, tf.float32)
 
         for i in range(iterations):
