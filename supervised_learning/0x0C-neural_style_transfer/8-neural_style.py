@@ -139,18 +139,25 @@ class NST():
             raise TypeError("input_layer must be a tensor of rank 4")
 
         # === way 1 ===
-        gram = tf.tensordot(a, a, [[0, 1, 2], [0, 1, 2]])
+        # gram = tf.tensordot(a, a, [[0, 1, 2], [0, 1, 2]])
 
         # === way 2 ===
         # channels = int(a.shape[-1])
         # a_ = tf.reshape(a, [-1, channels])
         # gram = tf.matmul(a_, a_, transpose_a=True)
 
-        # normalize gram matrix
-        n = tf.cast(a.shape[1] * a.shape[2], tf.float32)
-        gram_normalized = gram / n
+        # === way 3 - esinstain notation ===
+        # b: batch, h:height, w:width, c: channels, s: second_channels
+        gram = tf.linalg.einsum("bhwc,bhws->bcs", a, a)
 
-        return tf.expand_dims(gram_normalized, axis=0)
+        # normalize gram matrix
+        hw = tf.cast(a.shape[1] * a.shape[2], tf.float32)
+        gram_normalized = gram / hw
+
+        # for ways 1 & 2 - to recover the batch dimension
+        # gram_normalized = tf.expand_dims(gram_normalized, axis=0)
+
+        return gram_normalized
 
     def generate_features(self):
         '''extracts the features used to calculate neural style cost'''
@@ -185,18 +192,22 @@ class NST():
                 tf.rank(style_output).numpy() != 4):
             raise TypeError("style_output must be a tensor of rank 4")
 
-        channels = style_output.shape[-1]
+        c = style_output.shape.as_list()[-1]  # channels
 
         if (not (isinstance(gram_target, tf.Tensor) or
                  isinstance(gram_target, tf.Variable)) or
                 tf.rank(gram_target).numpy() != 3 or
-                gram_target.shape != (1, channels, channels)):
+                gram_target.shape != (1, c, c)):
             raise TypeError("gram_target must be a tensor of "
-                            "shape [1, {}, {}]".format(channels, channels))
+                            "shape [1, {}, {}]".format(c, c))
 
         gram_style = self.gram_matrix(style_output)
 
-        return tf.reduce_mean(tf.square(gram_style - gram_target))
+        # === way 1 ===
+        # return tf.reduce_mean(tf.square(gram_style - gram_target))
+
+        # === way 2 ===
+        return tf.reduce_sum(tf.square(gram_style - gram_target)) / (c ** 2)
 
     def style_cost(self, style_outputs):
         '''Calculates the style cost for generated image
@@ -207,21 +218,20 @@ class NST():
         '''
         len_style_layers = len(self.style_layers)
 
-        if (len(style_outputs) != len_style_layers):
+        if (type(style_outputs) is not list or
+                len(style_outputs) != len_style_layers):
             raise TypeError("style_outputs must be a list with a "
                             "length of {}".format(len_style_layers))
 
         weight = 1 / len_style_layers
-        weighted_layer_style_costs = []
+        s_cost = 0
 
         gram_targets = self.gram_style_features
 
-        for i, s_output in enumerate(style_outputs):
-            weighted_layer_style_costs.append(
-                self.layer_style_cost(s_output, gram_targets[i]) * weight
-            )
+        for s_output, target in zip(style_outputs, self.gram_style_features):
+            s_cost += self.layer_style_cost(s_output, target) * weight
 
-        return tf.add_n(weighted_layer_style_costs)
+        return s_cost
 
     def content_cost(self, content_output):
         '''Calculates the content cost for the generated image
@@ -238,7 +248,11 @@ class NST():
             raise TypeError("content_output must be a tensor of "
                             "shape {}".format(content_shape))
 
-        return tf.reduce_mean(tf.square(content_output - self.content_feature))
+        h, w, c = content_output.shape[1:]
+        square = tf.square(content_output - self.content_feature)
+        hwc = tf.cast(h * w * c, tf.float32)
+
+        return tf.reduce_sum(square) / hwc
 
     def total_cost(self, generated_image):
         '''Calculates the total cost for the generated image
@@ -294,7 +308,9 @@ class NST():
                             "shape {}".format(content_image_shape))
 
         with tf.GradientTape() as tape:
+            tape.watch(generated_image)
             loss = self.total_cost(generated_image)
+
         gradients = tape.gradient(loss[0], generated_image)
 
         return gradients, loss[0], loss[1], loss[2]

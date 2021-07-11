@@ -146,16 +146,16 @@ class NST():
         # a_ = tf.reshape(a, [-1, channels])
         # gram = tf.matmul(a_, a_, transpose_a=True)
 
-        # === way 3 - esinstain notation ===
+        # === way 3 - einstein notation ===
         # b: batch, h:height, w:width, c: channels, s: second_channels
         gram = tf.linalg.einsum("bhwc,bhws->bcs", a, a)
 
         # normalize gram matrix
-        n = tf.cast(a.shape[1] * a.shape[2], tf.float32)
-        gram_normalized = gram / n
+        hw = tf.cast(a.shape[1] * a.shape[2], tf.float32)
+        gram_normalized = gram / hw
 
         # for ways 1 & 2 - to recover the batch dimension
-        #gram_normalized = tf.expand_dims(gram_normalized, axis=0)
+        # gram_normalized = tf.expand_dims(gram_normalized, axis=0)
 
         return gram_normalized
 
@@ -192,18 +192,22 @@ class NST():
                 tf.rank(style_output).numpy() != 4):
             raise TypeError("style_output must be a tensor of rank 4")
 
-        channels = style_output.shape[-1]
+        c = style_output.shape.as_list()[-1]  # channels
 
         if (not (isinstance(gram_target, tf.Tensor) or
                  isinstance(gram_target, tf.Variable)) or
                 tf.rank(gram_target).numpy() != 3 or
-                gram_target.shape != (1, channels, channels)):
+                gram_target.shape != (1, c, c)):
             raise TypeError("gram_target must be a tensor of "
-                            "shape [1, {}, {}]".format(channels, channels))
+                            "shape [1, {}, {}]".format(c, c))
 
         gram_style = self.gram_matrix(style_output)
 
-        return tf.reduce_mean(tf.square(gram_style - gram_target))
+        # === way 1 ===
+        # return tf.reduce_mean(tf.square(gram_style - gram_target))
+
+        # === way 2 ===
+        return tf.reduce_sum(tf.square(gram_style - gram_target)) / (c ** 2)
 
     def style_cost(self, style_outputs):
         '''Calculates the style cost for generated image
@@ -220,16 +224,14 @@ class NST():
                             "length of {}".format(len_style_layers))
 
         weight = 1 / len_style_layers
-        weighted_layer_style_costs = []
+        s_cost = 0
 
         gram_targets = self.gram_style_features
 
-        for i, s_output in enumerate(style_outputs):
-            weighted_layer_style_costs.append(
-                self.layer_style_cost(s_output, gram_targets[i]) * weight
-            )
+        for s_output, target in zip(style_outputs, self.gram_style_features):
+            s_cost += self.layer_style_cost(s_output, target) * weight
 
-        return tf.add_n(weighted_layer_style_costs)
+        return s_cost
 
     def content_cost(self, content_output):
         '''Calculates the content cost for the generated image
@@ -246,7 +248,16 @@ class NST():
             raise TypeError("content_output must be a tensor of "
                             "shape {}".format(content_shape))
 
-        return tf.reduce_mean(tf.square(content_output - self.content_feature))
+        # === way 1 ===
+        # cc = tf.reduce_mean(tf.square(content_output - self.content_feature))
+        # return cc
+
+        # === way 2 ===
+        h, w, c = content_output.shape[1:]
+        square = tf.square(content_output - self.content_feature)
+        hwc = tf.cast(h * w * c, tf.float32)
+
+        return tf.reduce_sum(square) / hwc
 
     def total_cost(self, generated_image):
         '''Calculates the total cost for the generated image
@@ -302,7 +313,9 @@ class NST():
                             "shape {}".format(content_image_shape))
 
         with tf.GradientTape() as tape:
+            tape.watch(generated_image)
             loss = self.total_cost(generated_image)
+
         gradients = tape.gradient(loss[0], generated_image)
 
         return gradients, loss[0], loss[1], loss[2]
@@ -349,29 +362,52 @@ class NST():
         if (beta2 < 0 or beta2 > 1):
             raise ValueError("beta2 must be in the range [0, 1]")
 
-        generated_image = self.content_image
+        generated_image = tf.contrib.eager.Variable(self.content_image)
 
         opt = tf.train.AdamOptimizer(
             learning_rate=lr,
             beta1=beta1,
             beta2=beta2,
         )
+
         best_loss = tf.cast(0, tf.float32)
 
-        for i in range(iterations):
+        for i in range(iterations + 1):
+            # calculate gradients:
             grads, J_total, J_content, J_style = self.compute_grads(
                 generated_image
             )
-            opt.apply_gradients([(grads, generated_image)])
-            clipped = tf.clip_by_value(generated_image, 0.0, 1.0)
-            generated_image.assign(clipped)
 
-            if (J_total < best_loss):
+            # keep track of the best cost and the image associated with it
+            if (J_total < best_loss or best_loss.numpy() == 0):
                 best_loss = J_total
                 best_img = generated_image
 
-            if (i % step == 0 or i == iterations):
+            # gradient descent;
+            opt.apply_gradients([(grads, generated_image)])
+
+            # step info:
+            if (step is not None and (i % step == 0 or i == iterations)):
                 print("Cost at iteration {}: {}, content {}, "
                       "style {}".format(i, J_total, J_content, J_style))
 
-        return best_img, best_loss
+        best_img = np.squeeze(best_img.numpy(), 0)
+
+        # ===== next lines were trying to depreprocess for VGG19 ====
+
+        # best_img = tf.contrib.eager.Variable(self.content_image)
+        # best_img = tf.keras.applications.vgg19.preprocess_input(
+        #     best_img * 255
+        # )
+        # best_img = np.squeeze(best_img.numpy(), 0)
+        # # perform the inverse of the preprocessing step
+        # best_img[:, :, 0] += 103.939
+        # best_img[:, :, 1] += 116.779
+        # best_img[:, :, 2] += 123.68
+        # # 'BGR'->'RGB'
+        # best_img = best_img[:, :, ::-1]
+        # best_img = np.clip(best_img, 0, 255).astype('uint8')
+
+        # ============================================================
+
+        return best_img, best_loss.numpy()
