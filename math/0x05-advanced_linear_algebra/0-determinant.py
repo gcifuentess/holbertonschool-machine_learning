@@ -15,9 +15,9 @@ def determinant(matrix):
 
     len_mat = len(matrix)
 
-    # determinant of cero matrix is 0
+    # determinant of cero matrix is 1
     if (len_mat == 1 and matrix[0] == []):
-        return 0
+        return 1
 
     if not all(len(elem) == len_mat for elem in matrix):
         raise ValueError("matrix must be a square matrix")
