@@ -20,7 +20,7 @@ def mean_cov(X):
 
     n, d = X.shape
 
-    if (d < 2):
+    if (n < 2):
         raise ValueError("X must contain multiple data points")
 
     mean = np.mean(X, 0)
