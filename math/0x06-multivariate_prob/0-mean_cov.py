@@ -23,11 +23,12 @@ def mean_cov(X):
     if (n < 2):
         raise ValueError("X must contain multiple data points")
 
-    mean = np.mean(X, 0)
+    mean = np.mean(X, 0, keepdims=True)
     std_x = (X - mean)
     cov = np.matmul(std_x.T, std_x) / (n - 1)
     # The reason the sample covariance matrix has N-1} the denominator rather
     # than N is essentially that the population mean E(X) is not known and is
-    # replaced by the sample mean. From https://en.wikipedia.org/wiki/Covariance
+    # replaced by the sample mean.
+    # From https://en.wikipedia.org/wiki/Covariance
 
     return mean, cov
