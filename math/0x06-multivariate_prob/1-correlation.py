@@ -18,7 +18,7 @@ def correlation(C):
     if (len(C.shape) != 2 or d1 != d2):
         raise ValueError("C must be a 2D square matrix")
 
-    diag_sqrt = np.sqrt(np.diag(C))
-    diag_inv = np.diag(1 / diag_sqrt)
+    diag_sqrt = np.diag(np.sqrt(np.diag(C)))
+    diag_inv = np.linalg.inv(diag_sqrt)
 
     return diag_inv @ C @ diag_inv
