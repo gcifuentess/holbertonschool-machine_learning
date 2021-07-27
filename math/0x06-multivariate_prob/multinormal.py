@@ -40,7 +40,7 @@ class MultiNormal():
 
         d, _ = x.shape
 
-        if (len(x.shape) != 2 or d != self.d):
+        if (len(x.shape) != 2 or x.shape != (self.d, 1)):
             raise ValueError("x must have the shape ({}, 1)".
                              format(self.d))
 
