@@ -17,7 +17,7 @@ def posterior(x, n, p1, p2):
     Returns: the posterior probability that p is within the range [p1, p2]
              given x and n
     '''
-    if (type(n) is not int or n <= 0):
+    if (type(n) is not int or n < 0):
         raise ValueError("n must be a positive integer")
 
     if (type(x) is not int or x < 0):
