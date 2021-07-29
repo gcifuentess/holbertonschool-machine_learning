@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 '''Continuous Posterior module'''
-import numpy as np
 from scipy import special
 
 
@@ -27,12 +26,10 @@ def posterior(x, n, p1, p2):
     if (x > n):
         raise ValueError("x cannot be greater than n")
 
-    if (not isinstance(p1, float) or
-            not (np.all(p1 >= 0) and np.all(p1 <= 1))):
+    if ((not isinstance(p1, float)) or p1 < 0 or p2 > 1):
         raise TypeError("p1 must be a float in the range [0, 1]")
 
-    if (not isinstance(p2, float) or
-            not (np.all(p2 >= 0) and np.all(p2 <= 1))):
+    if ((not isinstance(p2, float)) or p2 < 0 or p2 > 1):
         raise TypeError("p2 must be a float in the range [0, 1]")
 
     if (p2 <= p1):
