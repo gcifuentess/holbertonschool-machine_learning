@@ -26,10 +26,10 @@ def posterior(x, n, p1, p2):
     if (x > n):
         raise ValueError("x cannot be greater than n")
 
-    if ((not isinstance(p1, float)) or p1 < 0 or p1 > 1):
+    if (type(p1) is not float or p1 < 0 or p1 > 1):
         raise TypeError("p1 must be a float in the range [0, 1]")
 
-    if ((not isinstance(p2, float)) or p2 < 0 or p2 > 1):
+    if (type(p2) is not float or p2 < 0 or p2 > 1):
         raise TypeError("p2 must be a float in the range [0, 1]")
 
     if (p2 <= p1):
@@ -38,4 +38,4 @@ def posterior(x, n, p1, p2):
     beta1 = special.btdtr(x + 1, n - x + 1, p1)
     beta2 = special.btdtr(x + 1, n - x + 1, p2)
 
-    return beta2 - beta1
+    return (beta2 - beta1)
