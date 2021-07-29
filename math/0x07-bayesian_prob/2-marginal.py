@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 '''Marginal Probability module'''
 import numpy as np
 
