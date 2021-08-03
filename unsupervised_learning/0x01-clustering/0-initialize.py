@@ -21,9 +21,18 @@ def initialize(X, k):
     Returns: a numpy.ndarray of shape (k, d) containing the initialized
              centroids for each cluster, or None on failure
     '''
-    try:
-        return np.random.uniform(low=np.min(X, axis=0),
-                                 high=np.max(X, axis=0),
-                                 size=(k, X.shape[1]))
-    except failure:
+    if (type(X) is not np.ndarray):
         return None
+
+    if (len(X.shape) != 2):
+        return None
+
+    if (type(k) is not int):
+        return None
+
+    if (k <= 0):
+        return None
+
+    return np.random.uniform(low=np.min(X, axis=0),
+                             high=np.max(X, axis=0),
+                             size=(k, X.shape[1]))
