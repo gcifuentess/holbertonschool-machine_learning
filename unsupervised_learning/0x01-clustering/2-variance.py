@@ -24,4 +24,7 @@ def variance(X, C):
     if (len(C.shape) != 2):
         return None
 
+    if (X.shape[1] != C.shape[1]):
+        return None
+
     return ((X - C[:, np.newaxis])**2).sum(axis=2).min(axis=0).sum()
