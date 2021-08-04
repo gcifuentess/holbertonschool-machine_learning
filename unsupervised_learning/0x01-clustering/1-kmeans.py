@@ -49,6 +49,10 @@ def kmeans(X, k, iterations=1000):
         if np.allclose(C_prev, C):
             break
 
+    # euclidian distance between data points and centroids:
+    distances = np.sqrt(((X - C[:, np.newaxis])**2).sum(axis=2))
+    clss = np.argmin(distances, axis=0)
+
     return C, clss
 
 
