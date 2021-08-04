@@ -33,5 +33,6 @@ def pdf(X, m, S):
     potence = ((X - m) @ np.linalg.inv(S) @ (X - m).T) * (- 1 / 2)
     P = const * np.exp(potence)
     P = P[np.diag_indices_from(P)]  # extract the diagonal
+    P = np.where(P < 1e-300, 1e-300, P)  # minimum value of 1e-300
 
     return P
