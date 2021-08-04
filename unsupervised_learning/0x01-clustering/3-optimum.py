@@ -16,15 +16,21 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
              check for (inclusive)
         iterations is a positive integer containing the maximum number of
                    iterations for K-means
+
+    Important: This function should analyze at least 2 different cluster sizes
+
     Returns: results, d_vars, or None, None on failure
                  - results is a list containing the outputs of K-means for
                            each cluster size
                  - d_vars is a list containing the difference in variance from
                           the smallest cluster size for each cluster size
     '''
+    if (type(kmin) is not int or kmin < 1):
+        return None, None
+
     if (kmax is None):
         kmax = kmin + 1
-    elif kmax <= kmin:
+    elif (type(kmax) is not int or kmax <= kmin):
         return None, None
 
     kmeans = __import__('1-kmeans').kmeans
@@ -33,19 +39,19 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
     results = []
     d_vars = []
     for k in range(kmin, kmax + 1):
+
         C, clss = kmeans(X, k, iterations)
         if (C is None or clss is None):
-            return C, clss
+            return None, None
 
         var = variance(X, C)
         if (var is None):
             return None, None
 
-        if k == kmin:
+        if (k == kmin):
             first_var = var
 
-        results.append(C)
-        results.append(clss)
+        results.append((C, clss))
         d_vars.append(first_var - var)
 
     return results, d_vars
