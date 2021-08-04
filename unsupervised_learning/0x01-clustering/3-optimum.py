@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 '''Optimize k'''
 import numpy as np
+kmeans = __import__('1-kmeans').kmeans
+variance = __import__('2-variance').variance
 
 
 def optimum_k(X, kmin=1, kmax=None, iterations=1000):
@@ -33,9 +35,6 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
     elif (type(kmax) is not int or kmax <= kmin):
         return None, None
 
-    kmeans = __import__('1-kmeans').kmeans
-    variance = __import__('2-variance').variance
-
     results = []
     d_vars = []
     for k in range(kmin, kmax + 1):
@@ -47,6 +46,8 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
         var = variance(X, C)
         if (var is None):
             return None, None
+
+        var = float(var)
 
         if (k == kmin):
             first_var = var
