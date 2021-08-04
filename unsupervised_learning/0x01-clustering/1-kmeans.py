@@ -35,23 +35,20 @@ def kmeans(X, k, iterations=1000):
     if (C is None):
         return None, None
 
-    for i in range(iterations):
+    for i in range(iterations + 1):
         C_prev = C.copy()
         # euclidian distance between data points and centroids:
         distances = np.sqrt(((X - C[:, np.newaxis])**2).sum(axis=2))
         clss = np.argmin(distances, axis=0)
-        for j in range(k):
-            # check if cluster contains data points:
-            if (X[clss == j].size and X[clss == j].ndim):
-                C[j] = X[clss == j].mean(axis=0)
-            else:
-                C[j] = initialize(X, 1)
-        if np.allclose(C_prev, C):
-            break
-
-    # euclidian distance between data points and centroids:
-    distances = np.sqrt(((X - C[:, np.newaxis])**2).sum(axis=2))
-    clss = np.argmin(distances, axis=0)
+        if (i < iterations):
+            for j in range(k):
+                # check if cluster contains data points:
+                if (X[clss == j].size and X[clss == j].ndim):
+                    C[j] = X[clss == j].mean(axis=0)
+                else:
+                    C[j] = initialize(X, 1)
+                if np.allclose(C_prev, C):
+                    break
 
     return C, clss
 
