@@ -29,7 +29,7 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
         return None, None
 
     if (kmax is None):
-        kmax = kmin + 1
+        kmax = X.shape[0]
     elif (type(kmax) is not int or kmax <= kmin):
         return None, None
 
