@@ -21,19 +21,19 @@ def kmeans(X, k, iterations=1000):
         If a cluster contains no data points during the update step,
             reinitialize its centroid
 
-    Returns: C, clss, or None on failure
+    Returns: C, clss, or None, None  on failure
                  - C is a numpy.ndarray of shape (k, d) containing the
                      centroid means for each cluster
                  - clss is a numpy.ndarray of shape (n,) containing the
                      index of the cluster in C that each data point belongs to
     '''
     if (type(iterations) is not int or iterations < 1):
-        return None
+        return None, None
 
     C = initialize(X, k)
 
     if (C is None):
-        return None
+        return None, None
 
     for i in range(iterations):
         C_prev = C.copy()
