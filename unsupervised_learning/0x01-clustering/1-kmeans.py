@@ -47,8 +47,8 @@ def kmeans(X, k, iterations=1000):
                     C[j] = X[clss == j].mean(axis=0)
                 else:
                     C[j] = initialize(X, 1)
-                if np.allclose(C_prev, C):
-                    break
+            if np.allclose(C_prev, C):
+                break
 
     return C, clss
 
