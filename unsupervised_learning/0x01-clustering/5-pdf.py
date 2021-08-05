@@ -30,9 +30,9 @@ def pdf(X, m, S):
 
     cov_det = np.linalg.det(S)
     const = 1 / (((2 * np.pi) ** (d / 2)) * (cov_det ** (1 / 2)))
-    potence = ((X - m) @ np.linalg.inv(S) @ (X - m).T) * (- 1 / 2)
+    potence = ((X - m) @ np.linalg.inv(S) * (X - m)).sum(axis=1) * (- 1 / 2)
     P = const * np.exp(potence)
-    P = P[np.diag_indices_from(P)]  # extract the diagonal
+    # P = P[np.diag_indices_from(P)]  # extract the diagonal
     P = np.where(P < 1e-300, 1e-300, P)  # minimum value of 1e-300
 
     return P
