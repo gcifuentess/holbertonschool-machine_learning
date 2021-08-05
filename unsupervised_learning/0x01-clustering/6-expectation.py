@@ -36,6 +36,9 @@ def expectation(X, pi, m, S):
     if (type(S)is not np.ndarray or S.shape != (k, d, d)):
         return None, None
 
+    if (not np.isclose(np.sum(pi), 1)):
+        return None, None
+
     likelihood = []
 
     for i in range(k):
