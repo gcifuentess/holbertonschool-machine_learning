@@ -29,7 +29,7 @@ def maximization(X, g):
     k, _ = g.shape
 
     # posterior probabilities should sum up to 1
-    if (not np.isclose(np.sum(g, axis=0), np.ones((k,))).all()):
+    if (not np.isclose(np.sum(g, axis=0), np.ones((n,))).all()):
         return None, None, None
 
     zg = np.sum(g, axis=1, keepdims=True)
