@@ -49,9 +49,9 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
         return None, None, None, None, None
 
     tll = 0
+    prev_l = tll
     g, tll = expectation(X, pi, m, S)
     for i in range(iterations):
-        prev_l = tll
 
         if (verbose and i % 10 == 0):
             print("Log Likelihood after {} iterations: {}"
@@ -62,6 +62,8 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
 
         if (abs(tll - prev_l) <= tol):
             break
+
+        prev_l = tll
 
     if (verbose):
         print("Log Likelihood after {} iterations: {}".
