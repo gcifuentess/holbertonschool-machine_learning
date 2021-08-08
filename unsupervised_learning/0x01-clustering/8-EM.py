@@ -49,16 +49,16 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
         return None, None, None, None, None
 
     tll = 0
-    for i in range(iterations + 1):
+    g, tll = expectation(X, pi, m, S)
+    for i in range(iterations):
         prev_l = tll
-        g, tll = expectation(X, pi, m, S)
 
         if (verbose and i % 10 == 0):
             print("Log Likelihood after {} iterations: {}"
                   .format(i, round(tll, 5)))
 
-        if (i < iterations):
-            pi, m, S = maximization(X, g)
+        pi, m, S = maximization(X, g)
+        g, tll = expectation(X, pi, m, S)
 
         if (abs(tll - prev_l) <= tol):
             break
