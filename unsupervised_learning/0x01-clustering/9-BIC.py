@@ -36,16 +36,17 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
     if (type(X) is not np.ndarray or len(X.shape) != 2):
         return None, None, None, None
 
-    if (type(kmin) is not int or kmin < 1):
+    n, d = X.shape
+
+    if (type(kmin) is not int or kmin < 1 or kmin >= n):
         return None, None, None, None
 
     if (kmax is None):
         kmax = X.shape[0]
-    elif (type(kmax) is not int or kmax <= kmin):
+    elif (type(kmax) is not int or kmax <= kmin or kmax > n):
         return None, None, None, None
 
     EM = expectation_maximization
-    n, d = X.shape
 
     b = []
     maximizations = []
