@@ -83,7 +83,7 @@ def absorbing(P):
     # is met. If in FR there is a row that doesn't sum up to one,
     # the property is not met:
     for i in range(n_abss):
-        if ((FR.sum(axis=1) < 1).any()):
+        if (not np.allclose(FR.sum(axis=1), np.ones((FR.shape[0], )))):
             return False
 
     return True
