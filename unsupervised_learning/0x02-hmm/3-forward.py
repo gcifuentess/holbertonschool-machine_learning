@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 '''The Forward Algorithm module'''
 import numpy as np
 
