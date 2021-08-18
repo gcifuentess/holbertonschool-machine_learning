@@ -36,9 +36,9 @@ class GaussianProcess():
                  (m, n)
         '''
         sqdist = (np.sum(X1 ** 2, 1).reshape(-1, 1) +
-                  np.sum(X2 ** 2, 1) -
-                  2 * np.dot(X1, X2.T))
+                  np.sum(X2 ** 2, 1) +
+                  (-2 * np.dot(X1, X2.T)))
 
-        K = (self.sigma_f ** 2) * np.exp((-1 / (2 * self.l)) ** 2 * sqdist)
+        K = (self.sigma_f ** 2) * np.exp((-1 / (2 * self.l ** 2)) * sqdist)
 
         return K
