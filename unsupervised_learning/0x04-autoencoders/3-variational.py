@@ -35,6 +35,15 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     z_mean = keras.layers.Dense(latent_dims)(layer_enc)
     z_log_sigma = keras.layers.Dense(latent_dims)(layer_enc)
 
+    def sample(args):
+        '''sample function '''
+        z_mean, z_log_sigma = args
+        s1 = keras.backend.shape(z_mean)[0]
+        s2 = keras.backend.int_shape(z_mean)[1]
+        epsilon = keras.backend.random_normal(shape=(s1, s2))
+
+        return z_mean + keras.backend.exp(z_log_sigma / 2) * epsilon
+
     z = keras.layers.Lambda(sample)([z_mean, z_log_sigma])
     encoded_input = keras.Input(shape=(latent_dims,))
 
@@ -76,13 +85,3 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     vae.compile(optimizer='adam', loss=vae_loss)
 
     return encoder, decoder, vae
-
-
-def sample(args):
-    '''sample function '''
-    z_mean, z_log_sigma = args
-    s1 = keras.backend.shape(z_mean)[0]
-    s2 = keras.backend.int_shape(z_mean)[1]
-    epsilon = keras.backend.random_normal(shape=(s1, s2))
-
-    return z_mean + keras.backend.exp(z_log_sigma / 2) * epsilon
