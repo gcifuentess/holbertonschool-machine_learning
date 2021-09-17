@@ -22,15 +22,17 @@ def ngram_bleu(references, sentence, n):
     references_mod = []
     c = len(sentence)
 
-    for i in range(c - 1):
-        sentence_mod.append((sentence[i], sentence[i + 1]))
+    for i in range(c - n + 1):
+        n_gram = tuple([sentence[i + j] for j in range(n)])
+        sentence_mod.append(n_gram)
 
     for reference in references:
         len_refs.append(len(reference))
 
         reference_mod = []
-        for j in range(len_refs[-1] - 1):
-            reference_mod.append((reference[j], reference[j + 1]))
+        for i in range(len_refs[-1] - n + 1):
+            n_gram = tuple([reference[i + j] for j in range(n)])
+            reference_mod.append(n_gram)
 
         references_mod.append(reference_mod)
 
