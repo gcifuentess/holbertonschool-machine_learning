@@ -3,7 +3,7 @@
 import tensorflow as tf
 
 
-class RNNEncoder():
+class RNNEncoder(tf.keras.layers.Layer):
     '''inherits from tensorflow.keras.layers.Layer to encode for machine
     translation'''
 
@@ -17,6 +17,7 @@ class RNNEncoder():
                   RNN cell
             batch is an integer representing the batch size
         '''
+        super().__init__()
         self.batch = batch
         self.units = units
         self.embedding = tf.keras.layers.Embedding(
