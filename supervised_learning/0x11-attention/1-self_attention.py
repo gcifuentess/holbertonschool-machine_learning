@@ -21,12 +21,11 @@ class SelfAttention(tf.keras.layers.Layer):
                 sum of the outputs of W and U
         '''
         super().__init__()
-        self.units = units
         self.W = tf.keras.layers.Dense(units=units)
         self.U = tf.keras.layers.Dense(units=units)
         self.V = tf.keras.layers.Dense(units=1)
 
-    def __call__(self, s_prev, hidden_states):
+    def call(self, s_prev, hidden_states):
         '''method to call the instance
         Args:
             s_prev is a tensor of shape (batch, units) containing the previous
@@ -44,7 +43,7 @@ class SelfAttention(tf.keras.layers.Layer):
         W_s = self.W(s_prev)
         U_h = self.U(hidden_states)
         aligment_model = self.V(tf.nn.tanh(W_s + U_h))
-        attention_weights = tf.nn.softmax(aligment_model)
+        attention_weights = tf.nn.softmax(aligment_model, axis=1)
         context = tf.reduce_sum(attention_weights * hidden_states, axis=1)
 
         return context, attention_weights
