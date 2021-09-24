@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''RNN Decoder module'''
 import tensorflow as tf
+SelfAttention = __import__('1-self_attention').SelfAttention
 
 
 class RNNDecoder(tf.keras.layers.Layer):
@@ -54,8 +55,6 @@ class RNNDecoder(tf.keras.layers.Layer):
             - s is a tensor of shape (batch, units) containing the new decoder
                 hidden state
         '''
-        SelfAttention = __import__('1-self_attention').SelfAttention
-
         _, units = s_prev.shape
         context, weights = SelfAttention(units)(s_prev, hidden_states)
 
