@@ -29,7 +29,7 @@ def sdp_attention(Q, K, V, mask=None):
     dk = tf.cast(Q.shape[-1], dtype=tf.float32)
     Q_K_scaled = Q_K / tf.math.sqrt(dk)
 
-    if mask:
+    if mask is not None:
         Q_K_scaled += mask * -1e9
 
     weights = tf.nn.softmax(Q_K_scaled)
