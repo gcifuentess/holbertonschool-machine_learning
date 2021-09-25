@@ -52,7 +52,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
                     (..., h, seq_len_q, seq_len_v) containing the attention
                     weights
         '''
-        batch = Q.shape[0]
+        batch = tf.shape(Q)[0]
 
         # shape (batch, seq_len_q, heads, depth):
         Qi = tf.reshape(self.Wq(Q), (batch, -1, self.h, self.depth))
