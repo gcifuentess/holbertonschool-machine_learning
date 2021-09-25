@@ -27,7 +27,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         super().__init__()
         self.h = h
         self.dm = dm
-        self.depth = dm // h
+        self.depth = int(dm / h)
         self.Wq = tf.keras.layers.Dense(dm)
         self.Wk = tf.keras.layers.Dense(dm)
         self.Wv = tf.keras.layers.Dense(dm)
@@ -60,12 +60,12 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         Qi = tf.transpose(Qi, perm=[0, 2, 1, 3])
 
         # shape (batch, seq_len_v, heads, depth):
-        Ki = tf.reshape(self.Wk(Q), (batch, -1, self.h, self.depth))
+        Ki = tf.reshape(self.Wk(K), (batch, -1, self.h, self.depth))
         # shape (batch, heads, seq_len_v, depth):
         Ki = tf.transpose(Ki, perm=[0, 2, 1, 3])
 
         # shape (batch, seq_len_v, heads, depth):
-        Vi = tf.reshape(self.Wv(Q), (batch, -1, self.h, self.depth))
+        Vi = tf.reshape(self.Wv(V), (batch, -1, self.h, self.depth))
         # shape (batch, heads, seq_len_v, depth):
         Vi = tf.transpose(Vi, perm=[0, 2, 1, 3])
 
