@@ -53,9 +53,9 @@ class EncoderBlock(tf.keras.layers.Layer):
         skip1 = x + smh_attention  # skip connection
         norm1 = self.layernorm1(skip1)
         linear = self.dense_hidden(norm1)
-        linear = self.dropout1(linear)
+        linear = self.dropout1(linear, training=training)
         linear = self.dense_output(linear)
-        linear = self.dropout2(linear)
+        linear = self.dropout2(linear, training=training)
         skip2 = norm1 + linear  # skip connection
 
         return self.layernorm2(skip2)
