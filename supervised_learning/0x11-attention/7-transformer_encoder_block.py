@@ -28,7 +28,7 @@ class EncoderBlock(tf.keras.layers.Layer):
         super().__init__()
         self.mha = MultiHeadAttention(dm, h)
         self.dense_hidden = tf.keras.layers.Dense(hidden, activation='relu')
-        self.dense_output = tf.keras.layers.Dense(dm, activation='relu')
+        self.dense_output = tf.keras.layers.Dense(dm)
         self.layernorm1 = tf.keras.layers.LayerNormalization(epsilon=1e-6)
         self.layernorm2 = tf.keras.layers.LayerNormalization(epsilon=1e-6)
         self.dropout1 = tf.keras.layers.Dropout(rate=drop_rate)
@@ -45,17 +45,13 @@ class EncoderBlock(tf.keras.layers.Layer):
         Returns: a tensor of shape (batch, input_seq_len, dm) containing the
                  block’s output
         '''
-        Q = x
-        K = x
-        V = x
-
-        smh_attention, _ = self.mha(Q, K, V, mask)
-        skip1 = x + smh_attention  # skip connection
+        mha, _ = self.mha(x, x, x, mask)
+        dropout1 = self.dropout1(mha, training=training)
+        skip1 = x + mha  # skip connection
         norm1 = self.layernorm1(skip1)
         linear = self.dense_hidden(norm1)
-        linear = self.dropout1(linear, training=training)
         linear = self.dense_output(linear)
-        linear = self.dropout2(linear, training=training)
-        skip2 = norm1 + linear  # skip connection
+        dropout2 = self.dropout2(linear, training=training)
+        skip2 = norm1 + dropout2  # skip connection
 
         return self.layernorm2(skip2)
