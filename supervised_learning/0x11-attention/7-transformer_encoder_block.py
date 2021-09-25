@@ -45,9 +45,9 @@ class EncoderBlock(tf.keras.layers.Layer):
         Returns: a tensor of shape (batch, input_seq_len, dm) containing the
                  block’s output
         '''
-        Q = self.mha.Wq(x)
-        K = self.mha.Wk(x)
-        V = self.mha.Wv(x)
+        Q = x
+        K = x
+        V = x
 
         smh_attention, _ = self.mha(Q, K, V, mask)
         skip1 = x + smh_attention  # skip connection
