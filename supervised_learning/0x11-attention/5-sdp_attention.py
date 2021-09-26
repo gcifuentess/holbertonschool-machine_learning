@@ -25,14 +25,22 @@ def sdp_attention(Q, K, V, mask=None):
         weights is a tensor with its last two dimensions as
                 (..., seq_len_q, seq_len_v) containing the attention weights
     '''
-    Q_K = tf.matmul(Q, K, transpose_b=True)
-    dk = tf.cast(Q.shape[-1], dtype=tf.float32)
-    Q_K_scaled = Q_K / tf.math.sqrt(dk)
+    # Q_K = tf.matmul(Q, K, transpose_b=True)
+    # dk = tf.cast(Q.shape[-1], dtype=tf.float32)
+    # Q_K_scaled = Q_K / tf.math.sqrt(dk)
 
+    # if mask is not None:
+    #     Q_K_scaled += mask * -1e9
+
+    # weights = tf.nn.softmax(Q_K_scaled)
+    # attention = tf.matmul(weights, V)
+
+    # return attention, weights
+    q = tf.matmul(Q, K, transpose_b=True)
+    dk = tf.cast(tf.shape(K)[-1], tf.float32)
+    sqr = q / tf.math.sqrt(dk)
     if mask is not None:
-        Q_K_scaled += mask * -1e9
-
-    weights = tf.nn.softmax(Q_K_scaled)
-    attention = tf.matmul(weights, V)
-
-    return attention, weights
+        sqr += (mask * -1e9)
+    weights = tf.nn.softmax(sqr, axis=-1)
+    output = tf.matmul(weights, V)
+    return output, weights
