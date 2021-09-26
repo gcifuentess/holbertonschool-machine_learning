@@ -91,9 +91,13 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         # ---
 
         # --- NEW VERSION ---
-        Qi = self.split_into_heads(self.Wq(Q), batch)
-        Ki = self.split_into_heads(self.Wk(K), batch)
-        Vi = self.split_into_heads(self.Wv(V), batch)
+        Qi = self.Wq(Q)
+        Ki = self.Wk(K)
+        Vi = self.Wv(V)
+
+        Qi = self.split_into_heads(Qi, batch)
+        Ki = self.split_into_heads(Ki, batch)
+        Vi = self.split_into_heads(Vi, batch)
         # ---
 
         # scaled_attention shape (batch, heads, seq_len_q, depth) &
