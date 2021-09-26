@@ -47,11 +47,9 @@ class EncoderBlock(tf.keras.layers.Layer):
         '''
         mha, _ = self.mha(x, x, x, mask)
         dropout1 = self.dropout1(mha, training=training)
-        skip1 = x + mha  # skip connection
-        norm1 = self.layernorm1(skip1)
+        norm1 = self.layernorm1(x + mha)  # skip conn + normalization
         linear = self.dense_hidden(norm1)
         linear = self.dense_output(linear)
         dropout2 = self.dropout2(linear, training=training)
-        skip2 = norm1 + dropout2  # skip connection
 
-        return self.layernorm2(skip2)
+        return self.layernorm2(norm1 + dropout2)  # skip conn + norm
