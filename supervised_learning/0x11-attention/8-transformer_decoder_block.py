@@ -60,25 +60,25 @@ class DecoderBlock(tf.keras.layers.Layer):
         Based on: https://www.tensorflow.org/text/tutorials/
                   transformer#decoder_layer
         '''
+        # first sub-block:
         mha1, _ = self.mha1(x, x, x, look_ahead_mask)
-        drop1 = self.dropout1(mha1, training=training)
-        skip1 = x + mha1  # skip connection
-        norm1 = self.layernorm1(skip1)
+        mha1 = self.dropout1(mha1, training=training)
+        out1 = self.layernorm1(mha1 + x)  # skip conn and norm
 
+        # second sub-block:
         mha2, _ = self.mha2(
-            norm1,  # Q
+            out1,  # Q
             encoder_output,  # K
             encoder_output,  # V
             padding_mask,
         )
+        mha2 = self.dropout2(mha2, training=training)
+        out2 = self.layernorm1(mha2 + out1)  # skip conn and norm
 
-        drop2 = self.dropout2(mha2, training=training)
-        skip2 = norm1 + mha2  # skip connection
-        norm2 = self.layernorm1(skip2)
-
-        linear = self.dense_hidden(norm2)
+        # third sub-block
+        linear = self.dense_hidden(out2)
         linear = self.dense_output(linear)
-        drop3 = self.dropout3(linear, training=training)
-        skip3 = norm2 + drop3
+        linear = self.dropout3(linear, training=training)
+        out3 = self.layernorm3(linear + out2)
 
-        return self.layernorm3(skip3)
+        return out3
