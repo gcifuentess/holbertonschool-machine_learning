@@ -26,7 +26,7 @@ def sdp_attention(Q, K, V, mask=None):
                 (..., seq_len_q, seq_len_v) containing the attention weights
     '''
     Q_K = tf.matmul(Q, K, transpose_b=True)
-    dk = tf.cast(K.shape[-1], dtype=tf.float32)
+    dk = tf.cast(tf.shape(Q)[-1], dtype=tf.float32)
     Q_K_scaled = Q_K / tf.math.sqrt(dk)
 
     if mask is not None:
