@@ -53,7 +53,7 @@ class Encoder(tf.keras.layers.Layer):
         Returns: a tensor of shape (batch, input_seq_len, dm) containing the
                  encoder output
         '''
-        input_seq_len = x.get_shape().as_list()[1]
+        input_seq_len = x.shape[1]
         x = self.embedding(x)
 
         # see chapter "3.4 Embeddings and Softmax" of
@@ -61,12 +61,8 @@ class Encoder(tf.keras.layers.Layer):
         # https://arxiv.org/pdf/1706.03762.pdf :
         x *= tf.math.sqrt(tf.cast(self.dm, dtype=tf.float32))
 
-        pos_encoding = tf.cast(
-            x=self.positional_encoding[:input_seq_len, :],
-            dtype=tf.float32,
-        )
+        x += self.positional_encoding[:input_seq_len]
 
-        x += pos_encoding[tf.newaxis, :, :]
         x = self.dropout(x, training)
 
         for block in self.blocks:
