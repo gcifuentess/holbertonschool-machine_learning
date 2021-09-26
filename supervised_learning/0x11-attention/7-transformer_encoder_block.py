@@ -25,52 +25,33 @@ class EncoderBlock(tf.keras.layers.Layer):
             dropout1 - the first dropout layer
             dropout2 - the second dropout layer
         '''
-    #     super().__init__()
-    #     self.mha = MultiHeadAttention(dm, h)
-    #     self.dense_hidden = tf.keras.layers.Dense(hidden, activation='relu')
-    #     self.dense_output = tf.keras.layers.Dense(dm)
-    #     self.layernorm1 = tf.keras.layers.LayerNormalization(epsilon=1e-6)
-    #     self.layernorm2 = tf.keras.layers.LayerNormalization(epsilon=1e-6)
-    #     self.dropout1 = tf.keras.layers.Dropout(rate=drop_rate)
-    #     self.dropout2 = tf.keras.layers.Dropout(rate=drop_rate)
-
-    # def call(self, x, training, mask=None):
-    #     '''method to call the instance
-    #     Args:
-    #         x - a tensor of shape (batch, input_seq_len, dm) containing the
-    #             input to the encoder block
-    #         training - a boolean to determine if the model is training
-    #         mask - the mask to be applied for multi head attention
-
-    #     Returns: a tensor of shape (batch, input_seq_len, dm) containing the
-    #              block’s output
-    #     '''
-    #     mha, _ = self.mha(x, x, x, mask)
-    #     dropout1 = self.dropout1(mha, training=training)
-    #     skip1 = x + mha  # skip connection
-    #     norm1 = self.layernorm1(skip1)
-    #     linear = self.dense_hidden(norm1)
-    #     linear = self.dense_output(linear)
-    #     dropout2 = self.dropout2(linear, training=training)
-    #     skip2 = norm1 + dropout2  # skip connection
-
-    #     return self.layernorm2(skip2)
-        super(EncoderBlock, self).__init__()
+        super().__init__()
         self.mha = MultiHeadAttention(dm, h)
         self.dense_hidden = tf.keras.layers.Dense(hidden, activation='relu')
         self.dense_output = tf.keras.layers.Dense(dm)
         self.layernorm1 = tf.keras.layers.LayerNormalization(epsilon=1e-6)
         self.layernorm2 = tf.keras.layers.LayerNormalization(epsilon=1e-6)
-        self.dropout1 = tf.keras.layers.Dropout(drop_rate)
-        self.dropout2 = tf.keras.layers.Dropout(drop_rate)
+        self.dropout1 = tf.keras.layers.Dropout(rate=drop_rate)
+        self.dropout2 = tf.keras.layers.Dropout(rate=drop_rate)
 
     def call(self, x, training, mask=None):
-        """ Function that returns a tensor that contains block’s output """
-        att_outp, _ = self.mha(x, x, x, mask)
-        att_outp = self.dropout1(att_outp, training=training)
-        outt = self.layernorm1(x + att_outp)
-        h_outp = self.dense_hidden(outt)
-        h_outp = self.dense_output(h_outp)
-        h_outp = self.dropout2(h_outp, training=training)
-        outp = self.layernorm2(outt + h_outp)
-        return outp
+        '''method to call the instance
+        Args:
+            x - a tensor of shape (batch, input_seq_len, dm) containing the
+                input to the encoder block
+            training - a boolean to determine if the model is training
+            mask - the mask to be applied for multi head attention
+
+        Returns: a tensor of shape (batch, input_seq_len, dm) containing the
+                 block’s output
+        '''
+        mha, _ = self.mha(x, x, x, mask)
+        dropout1 = self.dropout1(mha, training=training)
+        skip1 = x + mha  # skip connection
+        norm1 = self.layernorm1(skip1)
+        linear = self.dense_hidden(norm1)
+        linear = self.dense_output(linear)
+        dropout2 = self.dropout2(linear, training=training)
+        skip2 = norm1 + dropout2  # skip connection
+
+        return self.layernorm2(skip2)
