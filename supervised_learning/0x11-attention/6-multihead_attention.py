@@ -33,6 +33,19 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         self.Wv = tf.keras.layers.Dense(dm)
         self.linear = tf.keras.layers.Dense(dm)
 
+    def split_into_heads(self, x, batch_size):
+        '''splits x into self.h number of heads
+        Args:
+            x is a tensor of shape (batch seq_len, dm)
+            batch_size is a tensorflow.python.framework.ops.Tensor that
+                       holds the size of th batch
+
+        Returns: a tensor of shape (batch, heads, seq_len, depth)
+        '''
+        x = tf.reshape(x, (batch_size, -1, self.h, self.depth))
+
+        return tf.transpose(x, perm=[0, 2, 1, 3])
+
     def call(self, Q, K, V, mask):
         '''method to call the instance
         Args:
@@ -54,20 +67,28 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         '''
         batch = tf.shape(Q)[0]
 
-        # shape (batch, seq_len_q, heads, depth):
-        Qi = tf.reshape(self.Wq(Q), (batch, -1, self.h, self.depth))
-        # shape (batch, heads, seq_len_q, depth):
-        Qi = tf.transpose(Qi, perm=[0, 2, 1, 3])
+        # --- PREVIOUS VERSION ---
+        # # shape (batch, seq_len_q, heads, depth):
+        # Qi = tf.reshape(self.Wq(Q), (batch, -1, self.h, self.depth))
+        # # shape (batch, heads, seq_len_q, depth):
+        # Qi = tf.transpose(Qi, perm=[0, 2, 1, 3])
 
-        # shape (batch, seq_len_v, heads, depth):
-        Ki = tf.reshape(self.Wk(K), (batch, -1, self.h, self.depth))
-        # shape (batch, heads, seq_len_v, depth):
-        Ki = tf.transpose(Ki, perm=[0, 2, 1, 3])
+        # # shape (batch, seq_len_v, heads, depth):
+        # Ki = tf.reshape(self.Wk(K), (batch, -1, self.h, self.depth))
+        # # shape (batch, heads, seq_len_v, depth):
+        # Ki = tf.transpose(Ki, perm=[0, 2, 1, 3])
 
-        # shape (batch, seq_len_v, heads, depth):
-        Vi = tf.reshape(self.Wv(V), (batch, -1, self.h, self.depth))
-        # shape (batch, heads, seq_len_v, depth):
-        Vi = tf.transpose(Vi, perm=[0, 2, 1, 3])
+        # # shape (batch, seq_len_v, heads, depth):
+        # Vi = tf.reshape(self.Wv(V), (batch, -1, self.h, self.depth))
+        # # shape (batch, heads, seq_len_v, depth):
+        # Vi = tf.transpose(Vi, perm=[0, 2, 1, 3])
+        # ---
+
+        # --- NEW VERSION ---
+        Qi = self.split_into_heads(self.Wq(Q), batch)
+        Ki = self.split_into_heads(self.Wk(K), batch)
+        Vi = self.split_into_heads(self.Wv(V), batch)
+        # ---
 
         # output shape (batch, heads, seq_len_q, depth) &
         # weights shape (batch, heads, seq_len_q, seq_len_v):
