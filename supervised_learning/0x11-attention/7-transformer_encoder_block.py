@@ -25,7 +25,7 @@ class EncoderBlock(tf.keras.layers.Layer):
             dropout1 - the first dropout layer
             dropout2 - the second dropout layer
         '''
-        super().__init__()
+        super(EncoderBlock, self).__init__()
         self.mha = MultiHeadAttention(dm, h)
         self.dense_hidden = tf.keras.layers.Dense(hidden, activation='relu')
         self.dense_output = tf.keras.layers.Dense(dm)
