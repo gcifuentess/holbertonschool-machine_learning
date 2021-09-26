@@ -53,7 +53,7 @@ class Encoder(tf.keras.layers.Layer):
         Returns: a tensor of shape (batch, input_seq_len, dm) containing the
                  encoder output
         '''
-        input_seq_len = x.get_shape().as_list()[-1]
+        input_seq_len = x.get_shape().as_list()[1]
         x = self.embedding(x)
 
         # see chapter "3.4 Embeddings and Softmax" of
