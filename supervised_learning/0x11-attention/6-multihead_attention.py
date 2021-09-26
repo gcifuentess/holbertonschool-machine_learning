@@ -18,9 +18,9 @@ class MultiHeadAttention(tf.keras.layers.Layer):
             h - the number of heads
             dm - the dimensionality of the model
             depth - the depth of each attention head
-          Wq - a Dense layer with dm units, used to generate the query matrix
+            Wq - a Dense layer with dm units, used to generate the query matrix
             Wk - a Dense layer with dm units, used to generate the key matrix
-          Wv - a Dense layer with dm units, used to generate the value matrix
+            Wv - a Dense layer with dm units, used to generate the value matrix
             linear - a Dense layer with dm units, used to generate the
                      attention output
         '''
@@ -42,7 +42,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
               to generate the key matrix
            V is a tensor of shape (batch, seq_len_v, dv) containing the input
               to generate the value matrix
-            mask is always None
+           mask is always None
 
         Returns: output, weights
             output a tensor with its last two dimensions as
@@ -80,4 +80,4 @@ class MultiHeadAttention(tf.keras.layers.Layer):
 
         output = self.linear(output)
 
-       return output, weights
+        return output, weights
