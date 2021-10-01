@@ -20,10 +20,10 @@ What you should learn from this project:
 
 Software version:
 
-python3 (version 3.6.12)
-numpy (version 1.16)
-tensorflow (version 2.4.1)
-pycodestyle (version 2.4)
+* python3 (version 3.6.12)
+* numpy (version 1.16)
+* tensorflow (version 2.4.1)
+* pycodestyle (version 2.4)
 
 ---
 ---
