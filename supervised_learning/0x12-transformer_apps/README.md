@@ -16,6 +16,15 @@ What you should learn from this project:
 * How to write a custom train/test loop in Keras
 * How to use Tensorflow Datasets
 
+## Important:
+
+Software version:
+
+python3 (version 3.6.12)
+numpy (version 1.16)
+tensorflow (version 2.4.1)
+pycodestyle (version 2.4)
+
 ---
 ---
 
