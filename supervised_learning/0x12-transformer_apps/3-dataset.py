@@ -38,6 +38,7 @@ class Dataset():
             self.data_train
         )
 
+        # --- PIPELINE ---
         def filter_max_len(pt, en, max_len=max_len):
             '''checks if the len of pt and en are <= than max_len
             Args:
@@ -71,6 +72,7 @@ class Dataset():
                                padded_shapes=([None], [None]),
                                )
                            )
+        # ---
 
     def tokenize_dataset(self, data):
         '''creates sub-word tokenizers for our dataset
@@ -95,12 +97,13 @@ class Dataset():
 
         SubwordTextEncoder = tfds.deprecated.text.SubwordTextEncoder
 
-        tokenizer_en = SubwordTextEncoder.build_from_corpus(
-            corpus_generator=en_data,
-            target_vocab_size=2**15,
-        )
         tokenizer_pt = SubwordTextEncoder.build_from_corpus(
             corpus_generator=pt_data,
+            target_vocab_size=2**15,
+        )
+
+        tokenizer_en = SubwordTextEncoder.build_from_corpus(
+            corpus_generator=en_data,
             target_vocab_size=2**15,
         )
 
