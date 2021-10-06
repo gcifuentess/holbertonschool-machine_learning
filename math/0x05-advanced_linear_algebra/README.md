@@ -74,7 +74,7 @@ What you should learn from this project:
 # *HBTN PROJECT:*
 
 
-![](https://holbertonintranet.s3.amazonaws.com/uploads/medias/2018/9/dfef9b5a1411d49808c1.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIARDDGGGOUWMNL5ANN%2F20211006%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211006T225746Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=d9414ac76b6c2afb633aadf693e198bfba2bab5ffb0bb9acfc5a64213b7f48c2)
+![img](https://holbertonintranet.s3.amazonaws.com/uploads/medias/2018/9/dfef9b5a1411d49808c1.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIARDDGGGOUWMNL5ANN%2F20211006%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211006T225746Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=d9414ac76b6c2afb633aadf693e198bfba2bab5ffb0bb9acfc5a64213b7f48c2)
 
 
 Resources
