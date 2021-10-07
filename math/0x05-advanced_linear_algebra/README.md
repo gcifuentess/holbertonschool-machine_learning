@@ -21,7 +21,7 @@ Read or watch:
 * [Eigenvalues and Eigenvectors](https://math.mit.edu/%7Egs/linearalgebra/ila0601.pdf)
 * [Definiteness of a matrix](https://en.wikipedia.org/wiki/Definiteness_of_a_matrix)
 * [Definite, Semi-Definite and Indefinite Matrices](http://mathonline.wikidot.com/definite-semi-definite-and-indefinite-matrices)
-* [Tests for Positive Definiteness of a Matrix](https://intranet.hbtn.io/rltoken/rYtty7OT1dlzKac_-QGPhA)
+* [Tests for Positive Definiteness of a Matrix](https://www.gaussianwaves.com/2013/04/tests-for-positive-definiteness-of-a-matrix/)
 * [Positive Definite Matrices and Minima](https://www.youtube.com/watch?v=tccVVUnLdbc)
 * [Positive Definite Matrices](https://www.math.utah.edu/%7Ezwick/Classes/Fall2012_2270/Lectures/Lecture33_with_Examples.pdf)
 
