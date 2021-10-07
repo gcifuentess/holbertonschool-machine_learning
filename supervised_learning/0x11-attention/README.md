@@ -19,7 +19,7 @@ What you should learn from this project:
 * How to apply attention to RNNs
 * What is a transformer?
 * How to create an encoder-decoder transformer model
-* What is GPT? 
+* What is GPT?
 * What is BERT?
 * What is self-supervised learning?
 * How to use BERT for specific NLP tasks
@@ -274,7 +274,7 @@ Tasks
 
 **Resources:**
 
-* [Attention in RNN](https://intranet.hbtn.io/rltoken/XNYOpwFNw2OAIKVzSlzrxg "Attention in RNN")
+* [Attention in RNN](https://medium.datadriveninvestor.com/attention-in-rnns-321fbcd64f05 "Attention in RNN")
 
 
 ```
@@ -310,7 +310,7 @@ $
 ```
 ###  1. Self Attention
 
-Create a class `SelfAttention` that inherits from `tensorflow.keras.layers.Layer` to calculate the attention for machine translation based on [this paper](https://intranet.hbtn.io/rltoken/YlDIODUFbkYQbRL3a5CwEQ "this paper"):
+Create a class `SelfAttention` that inherits from `tensorflow.keras.layers.Layer` to calculate the attention for machine translation based on [this paper](https://arxiv.org/pdf/1409.0473.pdf "this paper"):
 
 * Class constructor `def __init__(self, units):`
 	+ `units` is an integer representing the number of hidden units in the alignment model
@@ -483,7 +483,7 @@ $
 
 ![](https://holbertonintranet.s3.amazonaws.com/uploads/medias/2020/7/4a5aaa54ebdc32529b4f09a5f22789dc267e0796.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIARDDGGGOUWMNL5ANN%2F20211007%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211007T194731Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=0d1f16f24829417ecea93a9a281e9584f264dab50d1841522f6c2c0318163bf9)
 
-* [Why multi-head self attention works: math, intuitions and 10+1 hidden insights](https://intranet.hbtn.io/rltoken/qcVYSQLK9dekVG99SfVA8Q "Why multi-head self attention works: math, intuitions and 10+1 hidden insights")
+* [Why multi-head self attention works: math, intuitions and 10+1 hidden insights](https://theaisummer.com/self-attention/ "Why multi-head self attention works: math, intuitions and 10+1 hidden insights")
 
 
 ```
