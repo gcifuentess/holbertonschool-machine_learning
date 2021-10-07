@@ -23,7 +23,7 @@ What you should learn from this project:
 
 ## Links to Files :file_folder:
 
-### [0. When to Invest](./README.md)
+### [0. When to Invest](./forecast_btc.py)
 * Bitcoin (BTC) became a trending topic after its price peaked in 2018. Many have sought to predict its value in order to accrue wealth. Let’s attempt to use our knowledge of RNNs to attempt just that.
 
 
@@ -131,6 +131,15 @@ Bitcoin (BTC) became a trending topic after its [price](https://intranet.hbtn.io
 * Your model should use an RNN architecture of your choosing
 * Your model should use mean-squared error (MSE) as its cost function
 * You should use a `tf.data.Dataset` to feed data to your model
+
+Because the dataset is raw, you will need to create a script, `preprocess_data.py` to preprocess this data. Here are some things to consider:
+
+* Are all of the data points useful?
+* Are all of the data features useful?
+* Should you rescale the data?
+* Is the current time window relevant?
+* How should you save this preprocessed data?
+
 ###  1. Everyone wants to know
 
 Everyone wants to know how to make money with BTC! Write a blog post explaining your process in completing the task above:
@@ -141,4 +150,10 @@ Everyone wants to know how to make money with BTC! Write a blog post explaining 
 * An explanation of the model architecture that you used
 * A results section containing the model performance and corresponding graphs
 * A conclusion of your experience, your thoughts on forecasting BTC, and a link to your github with the relevant code
+
+Your posts should have examples and at least one picture, at the top. Publish your blog post on Medium or LinkedIn, and share it at least on LinkedIn.
+
+When done, please add all URLs below (blog post, shared link, etc.)
+
+Please, remember that these blogs must be written in English to further your technical ability in a variety of settings.
 ---
