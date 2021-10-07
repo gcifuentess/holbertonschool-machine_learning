@@ -2,15 +2,15 @@
 
 ## Resources :books:
 Read or watch:
-* [An Introduction to Word Embeddings](https://intranet.hbtn.io/rltoken/VwPShE6ysZELC-fCFhJ7kw)
+* [An Introduction to Word Embeddings](https://www.springboard.com/blog/data-science/introduction-word-embeddings/)
 * [Introduction to Word Embeddings](http://hunterheidenreich.com/blog/intro-to-word-embeddings/)
 * [Natural Language Processing|Bag Of Words Intuition](https://www.youtube.com/watch?v=IKgBLTeQQL8&list=PLZoTAELRMXVMdJ5sqbCK2LiM0HhQVWNzm&index=5)
 * [Natural Language Processing|TF-IDF Intuition| Text Prerocessing](https://www.youtube.com/watch?v=D2V1okCEsiE&list=PLZoTAELRMXVMdJ5sqbCK2LiM0HhQVWNzm&index=7)
 * [Word Embedding - Natural Language Processing| Deep Learning](https://www.youtube.com/watch?v=pO_6Jk0QtKw&fbclid=IwAR3GeSWJUZKbvUJXXyy6rZTXsTkakS8znbhQ2uZsyakpBFWrk2ovBMG7c8Q)
 * [Word2Vec Tutorial - The Skip-Gram Model](http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/)
 * [Word2Vec Tutorial Part 2 - Negative Sampling](http://mccormickml.com/2017/01/11/word2vec-tutorial-part-2-negative-sampling/)
-* [GloVe Explained](https://intranet.hbtn.io/rltoken/myPyzhsVpaxc3hftSRyuuw)
-* [FastText: Under the Hood](https://intranet.hbtn.io/rltoken/8JTc7eoPMjKtaNosRvvYYw)
+* [GloVe Explained](https://medium.com/sciforce/word-vectors-in-natural-language-processing-global-vectors-glove-51339db89639)
+* [FastText: Under the Hood](https://towardsdatascience.com/fasttext-under-the-hood-11efc57b2b3)
 * [ELMo Explained](https://www.mihaileric.com/posts/deep-contextualized-word-representations-elmo/)
 
 ---
