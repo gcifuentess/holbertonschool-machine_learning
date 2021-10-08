@@ -6,9 +6,9 @@ Read or watch:
 * [BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding (2018)](https://arxiv.org/pdf/1810.04805.pdf)
 * [SQuAD 2.0](https://rajpurkar.github.io/SQuAD-explorer/)
 * [Know What You Don’t Know: Unanswerable Questions for SQuAD (2018)](https://arxiv.org/pdf/1806.03822.pdf)
-* [GLUE Benchmark](https://intranet.hbtn.io/rltoken/G5RYcXocPNTEGSeiWFfT9Q)
+* [GLUE Benchmark](https://gluebenchmark.com/)
 * [GLUE: A Multi-Task Benchmark and Analysis Platform for Natural Language Understanding (2019)](https://openreview.net/pdf?id=rJ4km2R5t7)
-* [Speech-transformer: A no-recurrence sequence-to-sequence model for speech recognition (2018)](https://intranet.hbtn.io/rltoken/t0l-uUrcWnFizy9y6ySnOg)
+* [Speech-transformer: A no-recurrence sequence-to-sequence model for speech recognition (2018)](http://150.162.46.34:8080/icassp2018/ICASSP18_USB/pdfs/0005884.pdf)
 
 ---
 ## Learning Objectives :bulb:
