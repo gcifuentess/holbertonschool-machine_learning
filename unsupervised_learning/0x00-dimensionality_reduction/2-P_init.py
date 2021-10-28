@@ -29,7 +29,8 @@ def P_init(X, perplexity):
     # Squared pairwise distance
     # See https://stackoverflow.com/questions/37009647
     sum_X = np.sum(np.square(X), 1)
-    D = np.add(np.add(-2 * np.dot(X, X.T), sum_X).T, sum_X)
+    D = np.add(np.add(-2 * np.matmul(X, X.T), sum_X).T, sum_X)
+    np.fill_diagonal(D, 0)
 
     P = np.zeros((n, n))
 
