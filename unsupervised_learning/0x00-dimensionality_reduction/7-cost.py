@@ -14,7 +14,7 @@ def cost(P, Q):
 
     Returns: C, the cost of the transformation
     '''
-    P = np.where(P == np.amin(P), 1e-12, P)
-    Q = np.where(Q == np.amin(Q), 1e-12, Q)
+    P = np.where(P < 1e-12, 1e-12, P)
+    Q = np.where(Q < 1e-12, 1e-12, Q)
 
     return (P * np.log(P / Q)).sum()
