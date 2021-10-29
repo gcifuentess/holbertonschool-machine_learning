@@ -14,7 +14,7 @@ def cost(P, Q):
 
     Returns: C, the cost of the transformation
     '''
-    P = np.where(P < 1e-12, 1e-12, P)
-    Q = np.where(Q < 1e-12, 1e-12, Q)
+    P = np.where(P >= 1e-12, P, 1e-12)
+    Q = np.where(Q >= 1e-12, Q, 1e-12)
 
     return (P * np.log(P / Q)).sum()
