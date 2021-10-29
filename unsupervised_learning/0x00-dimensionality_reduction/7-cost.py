@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-'''Cost'''
+'''Cost of the t-SNE transformation'''
 import numpy as np
 
 
