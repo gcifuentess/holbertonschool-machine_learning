@@ -6,7 +6,7 @@ forward = __import__('3-forward').forward
 backward = __import__('5-backward').backward
 
 
-def baum_welch(Observations, Transition, Emission, Initial, iterations=365):
+def baum_welch(Observations, Transition, Emission, Initial, iterations=385):
     '''performs the Baum-Welch algorithm for a hidden markov model
 
     Args:
