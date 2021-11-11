@@ -2,8 +2,6 @@
 '''The Baum-Welch Algorithm'''
 
 import numpy as np
-# forward = __import__('3-forward').forward
-# backward = __import__('5-backward').backward
 
 
 def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
