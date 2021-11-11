@@ -4,7 +4,7 @@
 import numpy as np
 
 
-def baum_welch(Observations, Transition, Emission, Initial, iterations=365):
+def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
     '''performs the Baum-Welch algorithm for a hidden markov model
 
     Args:
