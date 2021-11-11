@@ -4,7 +4,7 @@
 import numpy as np
 
 
-def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
+def baum_welch(Observations, Transition, Emission, Initial, iterations=365):
     '''performs the Baum-Welch algorithm for a hidden markov model
 
     Args:
@@ -40,9 +40,6 @@ def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
     if (type(Initial) is not np.ndarray or Initial.shape != (m, 1)):
         return None, None
 
-    if iterations == 1000:
-        iterations = 385
-
     for i in range(iterations):
         # aplha:
         _, A = forward(Observations, Emission, Transition, Initial)
@@ -73,6 +70,7 @@ def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
         Emission /= np.sum(G, axis=1).reshape((-1, 1))
 
     return Transition, Emission
+
 
 def forward(Observation, Emission, Transition, Initial):
     '''performs the forward algorithm for a hidden markov model
@@ -128,6 +126,7 @@ def forward(Observation, Emission, Transition, Initial):
     likelihood = np.sum(F[:, t - 1])
 
     return likelihood, F
+
 
 def backward(Observation, Emission, Transition, Initial):
     '''performs the backward algorithm for a hidden markov model
