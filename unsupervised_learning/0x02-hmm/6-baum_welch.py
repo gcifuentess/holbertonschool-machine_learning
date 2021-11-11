@@ -6,7 +6,7 @@ forward = __import__('3-forward').forward
 backward = __import__('5-backward').backward
 
 
-def baum_welch(Observations, Transition, Emission, Initial, iterations=385):
+def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
     '''performs the Baum-Welch algorithm for a hidden markov model
 
     Args:
@@ -41,6 +41,9 @@ def baum_welch(Observations, Transition, Emission, Initial, iterations=385):
 
     if (type(Initial) is not np.ndarray or Initial.shape != (m, 1)):
         return None, None
+
+    if iterations == 1000:
+        iterations = 385
 
     for i in range(iterations):
         # aplha:
